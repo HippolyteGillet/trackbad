@@ -11,7 +11,7 @@ class NavbarEvents extends StatefulWidget {
 }
 
 class _NavbarEventsState extends State<NavbarEvents> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   setCurrentIndex(int index) {
     setState(() {

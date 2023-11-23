@@ -14,11 +14,15 @@ class _LogPageState extends State<LogPage> {
     return Scaffold(
         backgroundColor: const Color.fromRGBO(33, 29, 29, 1),
         body: Column(children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: Image.asset('assets/images/logo_1.png',
-                width: 300, height: 300),
-          ),
+          const Padding(padding: EdgeInsets.only(top: 80)),
+          Image.asset('assets/images/logo_1.png', width: 300, height: 300),
+          const Text("Trackbad",
+              style: TextStyle(
+                fontFamily: 'LeagueSpartan',
+                fontWeight: FontWeight.bold,
+                fontSize: 45,
+                color: Colors.white,
+              )),
           const Padding(padding: EdgeInsets.only(top: 150)),
           Center(
             child: ElevatedButton(
