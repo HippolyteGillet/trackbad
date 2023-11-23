@@ -10,9 +10,15 @@ class ProfilPage extends StatefulWidget {
 class _ProfilPageState extends State<ProfilPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // Affiche une image
-      child: Image.asset('assets/images/Frise2.png'),
+    return const Center(
+      child: Text(
+        'Profil Page',
+        style: TextStyle(
+          fontFamily: 'LeagueSpartan',
+          fontWeight: FontWeight.bold,
+          fontSize: 25,
+        ),
+      ),
     );
   }
 }
