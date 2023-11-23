@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trackbad/pages/add_sensor_page.dart';
-import 'navbar_event.dart';
 import 'ongoing_session_page.dart';
 
 class TrainingPage extends StatefulWidget {
@@ -22,7 +21,7 @@ class _TrainingPageState extends State<TrainingPage> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'LeagueSpartan',
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w900,
               color: Color.fromRGBO(240, 54, 18, 1),
               fontSize: 40,
             ),
