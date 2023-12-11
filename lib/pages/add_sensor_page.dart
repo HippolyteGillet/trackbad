@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:trackbad/pages/link_player_to_sensor.dart';
-import 'package:trackbad/pages/navbar_event.dart';
 import 'package:trackbad/pages/search_sensor.dart';
 import 'link_session_type_to_sensor.dart';
 
 class AddSensorPage extends StatefulWidget {
-  const AddSensorPage({super.key});
+  final Function(Map<String, dynamic>) onAdd;
+
+  const AddSensorPage({Key? key, required this.onAdd}) : super(key: key);
 
   @override
   State<AddSensorPage> createState() => _AddSensorPageState();
 }
 
 class _AddSensorPageState extends State<AddSensorPage> {
+  void _handleAddSensor() {
+    Map<String, dynamic> newSensorData = {
+      'name': 'Movella TEST',
+      'batteryLevel': 100,
+    };
+    Navigator.of(context).pop(newSensorData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +46,7 @@ class _AddSensorPageState extends State<AddSensorPage> {
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.only(top:10, left: 15),
+              padding: EdgeInsets.only(top: 10, left: 15),
               child: Text(
                 "Associer à :",
                 style: TextStyle(
@@ -53,7 +62,7 @@ class _AddSensorPageState extends State<AddSensorPage> {
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.only(top:10, left: 15),
+              padding: EdgeInsets.only(top: 10, left: 15),
               child: Text(
                 "Type de séance :",
                 style: TextStyle(
@@ -68,10 +77,7 @@ class _AddSensorPageState extends State<AddSensorPage> {
           const LinkSessionTypeToSensor(),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const NavbarEvents()));
+              _handleAddSensor();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
