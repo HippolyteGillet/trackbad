@@ -3,7 +3,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'dynamic_battery_icon.dart';
 
 class SearchSensor extends StatefulWidget {
-  const SearchSensor({super.key});
+  final void Function(Map<String, dynamic> sensor) onSensorSelected;
+  const SearchSensor({Key? key, required this.onSensorSelected}) : super(key: key);
 
   @override
   State<SearchSensor> createState() => _SearchSensorState();
@@ -77,6 +78,7 @@ class _SearchSensorState extends State<SearchSensor> {
                       setState(() {
                         _selectedSensor = name;
                       });
+                      widget.onSensorSelected(sensor);
                     },
                     title: Text(name,
                         style: const TextStyle(
