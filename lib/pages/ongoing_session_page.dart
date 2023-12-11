@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trackbad/pages/loading_file_page.dart';
 
 class OngoingSessionPage extends StatefulWidget {
   const OngoingSessionPage({super.key});
@@ -23,12 +24,18 @@ class _OngoingSessionPageState extends State<OngoingSessionPage> {
                 color: Color.fromRGBO(240, 54, 18, 1),
               )),
           const Padding(padding: EdgeInsets.only(top: 60)),
-          Image.network("https://media.giphy.com/media/3HApvvXC7f8aSdAqT3/giphy.gif", width: 300, height: 300),
+          Image.network(
+              "https://media.giphy.com/media/3HApvvXC7f8aSdAqT3/giphy.gif",
+              width: 300,
+              height: 300),
           const Padding(padding: EdgeInsets.only(top: 150)),
           Center(
               child: ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => const LoadingFile()));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
