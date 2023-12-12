@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trackbad/pages/link_player_to_sensor.dart';
+import 'package:trackbad/pages/navbar_event.dart';
 import 'package:trackbad/pages/search_sensor.dart';
 import 'link_session_type_to_sensor.dart';
 
