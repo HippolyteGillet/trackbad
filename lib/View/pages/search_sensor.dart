@@ -12,7 +12,6 @@ class SearchSensor extends StatefulWidget {
 }
 
 class _SearchSensorState extends State<SearchSensor> {
-  String _selectedSensor = '';
 
   @override
   void initState() {
@@ -21,9 +20,17 @@ class _SearchSensorState extends State<SearchSensor> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    // Arrêter le timer
+    final controller = Provider.of<Controller>(context, listen: false);
+    controller.stopSensorRefreshTimer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
-    final sensors = controller.model.capteurs;
+    final sensors = controller.model.sensorsEnable + controller.model.sensorsConnected;
 
     return Container(
       margin: const EdgeInsets.only(top: 10),
@@ -85,17 +92,20 @@ class _SearchSensorState extends State<SearchSensor> {
                         final sensor = sensors[index];
                         final name = sensor.uuid;
                         final batteryLevel = sensor.batterie;
-                        final isSelected = _selectedSensor == name;
+                        final isSensorConnected = controller.model.sensorsConnected.any((s) => s.uuid == name);
 
                         return Card(
-                          color: isSelected ? Colors.orange : Colors.white,
+                          color: isSensorConnected ? Colors.orange : Colors.white,
                           shadowColor: Colors.grey[200],
                           elevation: 3,
                           child: ListTile(
                             onTap: () {
-                              setState(() {
-                                _selectedSensor = name;
-                              });
+                              final controller = Provider.of<Controller>(context, listen: false);
+                              if(!isSensorConnected){
+                                controller.connectSensor(name);
+                              }else {
+                                controller.disconnectSensor(name);
+                              }
                             },
                             title: Text(
                               name,

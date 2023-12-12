@@ -6,6 +6,7 @@ import MovellaDotSdk
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
     private var deviceList: [DotDevice] = []
+    private var connectedDeviceList: [DotDevice] = []
     private var plotDataList: [DotPlotData] = []
     private let dataAccessQueue = DispatchQueue(label: "com.connexion_capteur.dataAccessQueue")
     private let exportGroup = DispatchGroup()
@@ -28,6 +29,8 @@ import MovellaDotSdk
                 self?.scanSensors(result: result)
             case "connectSensor":
                 self?.handleConnectSensor(call: call, result: result)
+            case "disconnectSensor":
+                self?.handleDisconnectSensor(call: call, result: result)
             case "startRecording":
                 self?.handleStartRecording(call: call, result: result)
             case "stopRecordingAndExportData":
@@ -48,7 +51,7 @@ import MovellaDotSdk
             DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
                 // Créer la liste des capteurs à partir de la liste mise à jour
                 let sensors = self.deviceList.map { device -> [String: Any] in
-                    return ["uuid": device.uuid, "batterie": 100, "estConnecte": true]
+                    return ["uuid": device.uuid, "batterie": 100]
                 }
                 print("Scanning completed. Found sensors: \(sensors)")
 
@@ -65,16 +68,46 @@ import MovellaDotSdk
 
     private func handleConnectSensor(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let args = call.arguments as? String, let deviceToConnect = deviceList.first(where: { $0.uuid == args }) {
+            connectedDeviceList.append(deviceToConnect)
             DotConnectionManager.connect(deviceToConnect)
             DotDevicePool.bindDevice(deviceToConnect)
             print("Connecting to sensor: \(deviceToConnect.uuid)")
-            result(true)
+
+            // Delay to allow sensor initialization
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { // Adjust delay as needed
+                print("Battery of sensor: \(deviceToConnect.battery?.description())")
+                let batteryLevel = deviceToConnect.battery?.description() // Replace with actual property to get battery state
+                let connectionDetails = ["battery": batteryLevel]
+                result(connectionDetails)
+            }
         } else {
             print("Failed to connect to sensor")
-            result(false)
+            result(FlutterError(code: "UNAVAILABLE", message: "Sensor not available or connection failed", details: nil))
         }
     }
 
+    
+    private func handleDisconnectSensor(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if let args = call.arguments as? String {
+            print("Received UUID to disconnect: \(args)")
+            print("Available devices: \(deviceList.map { $0.uuid })")
+
+            if let deviceToDisconnect = connectedDeviceList.first(where: { $0.uuid == args }) {
+                DotConnectionManager.disconnect(deviceToDisconnect)
+                DotDevicePool.unbindDevice(deviceToDisconnect)
+                print("Disconnecting from sensor: \(deviceToDisconnect.uuid)")
+                result(true)
+            } else {
+                print("No device found with UUID: \(args)")
+                result(false)
+            }
+        } else {
+            print("Invalid arguments: \(String(describing: call.arguments))")
+            result(false)
+        }
+    }
+    
+    
     private func handleStartRecording(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let args = call.arguments as? String, let device = deviceList.first(where: { $0.uuid == args }) {
             device.startRecording(0xFFFF)
