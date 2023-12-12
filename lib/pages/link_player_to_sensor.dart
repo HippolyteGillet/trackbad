@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LinkPlayerToSensor extends StatefulWidget {
-  const LinkPlayerToSensor({super.key});
+  final void Function(Map<String, dynamic> sensor) onPlayerSelected;
+  const LinkPlayerToSensor({Key? key, required this.onPlayerSelected}) : super(key: key);
 
   @override
   State<LinkPlayerToSensor> createState() => _LinkPlayerToSensorState();
@@ -25,6 +26,7 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
           setState(() {
             _selectedButton = text;
           });
+          widget.onPlayerSelected({'name': text});
         },
         child: Text(
           text,
