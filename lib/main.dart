@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:trackbad/pages/log_page.dart';
+import 'package:provider/provider.dart';
+import 'package:trackbad/Controller/controller.dart';
+import 'package:trackbad/Model/model.dart';
+import 'package:trackbad/Model/User.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  final model = ApplicationModel();
+  model.ajouterUtilisateur("user1", 1);
+  model.ajouterUtilisateur("user2", 2);
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => Controller(model: model),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LogPage(),
+    return MaterialApp(
+      title: 'Trackbad',
+      home: Provider.of<Controller>(context).homeWidget, // Exemple d'accès
     );
   }
 }
-
