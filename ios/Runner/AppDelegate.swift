@@ -41,16 +41,17 @@ import MovellaDotSdk
 
     private func scanSensors(result: @escaping FlutterResult) {
         if DotConnectionManager.managerStateIsPoweredOn() {
+            deviceList.removeAll() // Nettoyer la liste avant de commencer le scan
             DotConnectionManager.scan()
             DotConnectionManager.setConnectionDelegate(self)
 
-            DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+                // Créer la liste des capteurs à partir de la liste mise à jour
                 let sensors = self.deviceList.map { device -> [String: Any] in
-                    return ["uuid": device.uuid, "batterie": 100, "estConnecte": false]
+                    return ["uuid": device.uuid, "batterie": 100, "estConnecte": true]
                 }
                 print("Scanning completed. Found sensors: \(sensors)")
-                
-                // Utilisez DispatchQueue.main.async pour renvoyer la réponse sur le thread principal
+
                 DispatchQueue.main.async {
                     result(sensors)
                 }
@@ -60,6 +61,7 @@ import MovellaDotSdk
             result(FlutterError(code: "BLE_NOT_ENABLED", message: "Bluetooth is not enabled", details: nil))
         }
     }
+
 
     private func handleConnectSensor(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let args = call.arguments as? String, let deviceToConnect = deviceList.first(where: { $0.uuid == args }) {

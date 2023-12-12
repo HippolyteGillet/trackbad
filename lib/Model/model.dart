@@ -15,23 +15,17 @@ class ApplicationModel with ChangeNotifier{
 
   List<User> get utilisateurs => users;
 
-  void ajouterCapteur(String uuid, int batterie, bool estConnecte) {
-    // Vérifier si un capteur avec le même UUID existe déjà dans la liste
-    final existingSensorIndex = sensors.indexWhere(
-          (sensor) => sensor.uuid == uuid,
-    );
+  List<Sensor> get capteurs => sensors;
 
-    if (existingSensorIndex == -1) {
-      // Si le capteur n'existe pas dans la liste, l'ajouter
-      sensors.add(Sensor(uuid, batterie, estConnecte));
-    } else {
-      // Si le capteur existe déjà, mettre à jour ses informations (batterie, estConnecte)
-      final existingSensor = sensors[existingSensorIndex];
-      existingSensor.batterie = batterie;
-      existingSensor.estConnecte = estConnecte;
-    }
+  void ajouterCapteur(String uuid, int batterie, bool estConnecte) {
+    sensors.add(Sensor(uuid, batterie, estConnecte));
   }
 
-  List<Sensor> get capteurs => sensors;
+  void reconstruireListeCapteurs(List<Sensor> nouveauxCapteurs) {
+    sensors.clear();
+    sensors.addAll(nouveauxCapteurs);
+    notifyListeners();
+  }
+
 }
 

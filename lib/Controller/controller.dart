@@ -19,7 +19,7 @@ class Controller with ChangeNotifier {
 
   void startSensorRefreshTimer() {
     // Créez un timer qui appelle getSensors toutes les 5 secondes
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       getSensors(); // Appelez getSensors toutes les secondes
     });
   }
@@ -32,7 +32,7 @@ class Controller with ChangeNotifier {
   Future<void> getSensors() async {
     try {
       final List<dynamic> result = await platform.invokeMethod('getSensors');
-      final sensors = result.map((e) {
+      final List<Sensor> nouveauxCapteurs = result.map((e) {
         Map<String, dynamic> sensorData = Map<String, dynamic>.from(e);
         return Sensor(
           sensorData['uuid'],
@@ -41,13 +41,12 @@ class Controller with ChangeNotifier {
         );
       }).toList();
 
-      for (var sensor in sensors) {
-        model.ajouterCapteur(sensor.uuid, sensor.batterie, sensor.estConnecte);
-      }
+      model.reconstruireListeCapteurs(nouveauxCapteurs);
 
       notifyListeners(); // Notifie les changements
     } on PlatformException catch (e) {
       print("Failed to get sensors: '${e.message}'");
     }
   }
+
 }
