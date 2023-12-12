@@ -7,8 +7,8 @@ import 'package:trackbad/Model/User.dart';
 
 void main() {
   final model = ApplicationModel();
-  model.ajouterUtilisateur("user1", 1);
-  model.ajouterUtilisateur("user2", 2);
+  model.ajouterUtilisateur("Elie BIME", 1);
+  model.ajouterUtilisateur("Pag ZERRRR", 2);
 
   runApp(
     ChangeNotifierProvider(

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:trackbad/Model/connectedSensor.dart';
 import 'Sensor.dart';
 import 'User.dart';
 
@@ -6,7 +7,7 @@ import 'User.dart';
 
 class ApplicationModel with ChangeNotifier{
   List<Sensor> sensorsEnable = [];
-  List<Sensor> sensorsConnected = [];
+  List<connectedSensor> sensorsConnected = [];
   List<User> users = [];
 
   void ajouterUtilisateur(String nom, int id) {
@@ -19,7 +20,7 @@ class ApplicationModel with ChangeNotifier{
   List<Sensor> get capteurs => sensorsEnable;
 
   void addSensorEnable(String uuid, int batterie, bool estConnecte) {
-    sensorsEnable.add(Sensor(uuid, batterie));
+    sensorsEnable.add(Sensor(uuid));
   }
 
   void removeSensorEnable(String uuid) {
@@ -32,12 +33,13 @@ class ApplicationModel with ChangeNotifier{
     notifyListeners();
   }
 
-  void addSensorConnected(String uuid, int batterie, bool estConnecte) {
-    sensorsConnected.add(Sensor(uuid, batterie));
-  }
 
   void removeSensorConnected(String uuid) {
-    sensorsConnected.removeWhere((element) => element.uuid == uuid);
+    sensorsConnected.removeWhere((element) => element.sensor.uuid == uuid);
+  }
+
+  void addSensorConnected(connectedSensor sensor) {
+    sensorsConnected.add(sensor);
   }
 
 

@@ -30,7 +30,10 @@ class _SearchSensorState extends State<SearchSensor> {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
-    final sensors = controller.model.sensorsEnable + controller.model.sensorsConnected;
+    final enabledSensors = controller.model.sensorsEnable;
+    final connectedSensors = controller.model.sensorsConnected.map((connectedSensor) => connectedSensor.sensor).toList();
+
+    final combinedSensors = enabledSensors + connectedSensors;
 
     return Container(
       margin: const EdgeInsets.only(top: 10),
@@ -67,7 +70,7 @@ class _SearchSensorState extends State<SearchSensor> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: _refreshSensors,
-              child: sensors.isEmpty
+              child: combinedSensors.isEmpty
                   ? SingleChildScrollView(
                       physics: AlwaysScrollableScrollPhysics(),
                       child: Container(
@@ -87,13 +90,19 @@ class _SearchSensorState extends State<SearchSensor> {
                     )
                   : ListView.builder(
                       shrinkWrap: true, // Ajoutez cette ligne
-                      itemCount: sensors.length,
+                      itemCount: combinedSensors.length,
                       itemBuilder: (context, index) {
-                        final sensor = sensors[index];
+                        final sensor = combinedSensors[index];
                         final name = sensor.uuid;
-                        final batteryLevel = sensor.batterie;
-                        final isSensorConnected = controller.model.sensorsConnected.any((s) => s.uuid == name);
+// Check if the sensor is connected
+                        final isSensorConnected = controller.model.sensorsConnected.any((s) => s.sensor.uuid == name);
 
+                        // Get the battery level only if the sensor is connected
+                        int? batteryLevel;
+                        if (isSensorConnected) {
+                          final connectedSensor = controller.model.sensorsConnected.firstWhere((s) => s.sensor.uuid == name);
+                          batteryLevel = connectedSensor.battery;
+                        }
                         return Card(
                           color: isSensorConnected ? Colors.orange : Colors.white,
                           shadowColor: Colors.grey[200],
@@ -117,19 +126,21 @@ class _SearchSensorState extends State<SearchSensor> {
                             ),
                             subtitle: Row(
                               children: [
-                                DynamicBatteryIcon(
-                                  batteryLevel: int.parse('$batteryLevel'),
-                                ),
-                                const Padding(
-                                    padding: EdgeInsets.only(left: 10)),
-                                Text(
-                                  '$batteryLevel%',
-                                  style: const TextStyle(
-                                    fontFamily: 'LeagueSpartan',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
+                                if(isSensorConnected) ...[
+                                  DynamicBatteryIcon(
+                                    batteryLevel: int.parse('$batteryLevel'),
                                   ),
-                                ),
+                                  const Padding(
+                                      padding: EdgeInsets.only(left: 10)),
+                                  Text(
+                                    '$batteryLevel%',
+                                    style: const TextStyle(
+                                      fontFamily: 'LeagueSpartan',
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ]
                               ],
                             ),
                             trailing: Image.asset(

@@ -1,3 +1,5 @@
+import 'package:trackbad/Model/connectedSensor.dart';
+
 import '../Model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,8 +37,7 @@ class Controller with ChangeNotifier {
       final List<Sensor> nouveauxCapteurs = result.map((e) {
         Map<String, dynamic> sensorData = Map<String, dynamic>.from(e);
         return Sensor(
-          sensorData['uuid'],
-          sensorData['batterie'],
+          sensorData['uuid']
         );
       }).toList();
 
@@ -56,8 +57,11 @@ class Controller with ChangeNotifier {
       String batteryDescription = result['battery'] ?? "Battery:(Uncharged, 100%)";
       int batteryLevel = parseBatteryLevel(batteryDescription);
 
+      connectedSensor cSensor = connectedSensor.withSensor(Sensor(sensorUuid));
+      cSensor.battery = batteryLevel;
+      cSensor.batteryIsCharging = batteryDescription.contains("Charging") ? "Yes" : "No";
       model.removeSensorEnable(sensorUuid);
-      model.addSensorConnected(sensorUuid, batteryLevel, true);
+      model.addSensorConnected(cSensor);
       notifyListeners();
     } on PlatformException catch (e) {
       print("Failed to connect the sensor: '${e.message}'");
@@ -79,6 +83,18 @@ class Controller with ChangeNotifier {
   Future<void> disconnectSensor(String sensorUuid) async {
     try {
       final bool result = await platform.invokeMethod('disconnectSensor', sensorUuid);
+      if (result) {
+        model.removeSensorConnected(sensorUuid);
+        notifyListeners();
+      }
+    } on PlatformException catch (e) {
+      print("Failed to disconnect the sensor: '${e.message}'");
+    }
+  }
+
+  Future<void> setSelectedPlayer(String sensorUuid) async {
+    try {
+      final bool result = await platform.invokeMethod('setSelectedPlayer', sensorUuid);
       if (result) {
         model.removeSensorConnected(sensorUuid);
         notifyListeners();

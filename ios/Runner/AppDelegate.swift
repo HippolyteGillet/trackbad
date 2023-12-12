@@ -75,7 +75,7 @@ import MovellaDotSdk
 
             // Delay to allow sensor initialization
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { // Adjust delay as needed
-                print("Battery of sensor: \(deviceToConnect.battery?.description())")
+                
                 let batteryLevel = deviceToConnect.battery?.description() // Replace with actual property to get battery state
                 let connectionDetails = ["battery": batteryLevel]
                 result(connectionDetails)
