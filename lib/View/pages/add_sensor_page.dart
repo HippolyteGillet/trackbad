@@ -1,8 +1,11 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:trackbad/View/pages/link_player_to_sensor.dart';
 import 'package:trackbad/View//pages/navbar_event.dart';
 import 'package:trackbad/View//pages/search_sensor.dart';
 import 'link_session_type_to_sensor.dart';
+import 'package:provider/provider.dart';
+import '../../Controller/controller.dart';
 
 class AddSensorPage extends StatefulWidget {
   const AddSensorPage({super.key});
@@ -14,6 +17,8 @@ class AddSensorPage extends StatefulWidget {
 class _AddSensorPageState extends State<AddSensorPage> {
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -67,11 +72,23 @@ class _AddSensorPageState extends State<AddSensorPage> {
           ),
           const LinkSessionTypeToSensor(),
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await controller.addActiveSensor(); // Appel asynchrone de addActiveSensor
+
+              // Vérifier si le widget est toujours dans l'arbre des widgets
+              if (!mounted) return;
+
+              // Vérifier l'état du capteur connecté
+              var connectedSensor = controller.model.sensors.firstWhereOrNull((s) => s!.isConnected);
+              if (connectedSensor?.isActif == true) {
+                // Naviguer vers NavbarEvents si le capteur est actif
+                Navigator.push(
                   context,
                   PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const NavbarEvents()));
+                    pageBuilder: (_, __, ___) => const NavbarEvents(),
+                  ),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(240, 54, 18, 1),

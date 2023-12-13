@@ -51,7 +51,7 @@ import MovellaDotSdk
             DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
                 // Créer la liste des capteurs à partir de la liste mise à jour
                 let sensors = self.deviceList.map { device -> [String: Any] in
-                    return ["uuid": device.uuid, "batterie": 100]
+                    return ["uuid": device.uuid]
                 }
                 print("Scanning completed. Found sensors: \(sensors)")
 
@@ -75,9 +75,12 @@ import MovellaDotSdk
 
             // Delay to allow sensor initialization
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { // Adjust delay as needed
-                
-                let batteryLevel = deviceToConnect.battery?.description() // Replace with actual property to get battery state
-                let connectionDetails = ["battery": batteryLevel]
+                let connectionDetails = [
+                    "macAdress": deviceToConnect.macAddress,
+                    "battery": deviceToConnect.battery?.description,
+                    "totalSpace": deviceToConnect.totalSpace,
+                    "usedSpace": deviceToConnect.usedSpace
+                ]
                 result(connectionDetails)
             }
         } else {

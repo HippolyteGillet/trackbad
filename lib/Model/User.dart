@@ -1,6 +1,7 @@
 class User {
   int _id;
   String _nom;
+  bool isActif = false;
 
   User(this._id, this._nom);
 

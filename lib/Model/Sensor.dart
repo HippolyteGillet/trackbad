@@ -1,12 +1,38 @@
+import '../Model/User.dart';
 
-import 'package:flutter/material.dart';
+enum typeSeance { Entrainement, Match }
+
+extension TypeSeanceExtension on typeSeance {
+  String get stringValue {
+    switch (this) {
+      case typeSeance.Entrainement:
+        return 'Entrainement';
+      case typeSeance.Match:
+        return 'Match';
+      default:
+        return ''; // Gérer d'autres cas si nécessaire
+    }
+  }
+}
 
 class Sensor {
-  String _uuid;
+  String? uuid;
+  String? macAdress;
+  int? battery;
+  bool? batteryIsCharging;
+  int? totalSpace;
+  int? usedSpace;
 
-  Sensor(this._uuid);
+  bool isConnected = false;
+  bool isActif = false;
 
-  String get uuid => _uuid;
-  set uuid(String value) => _uuid = value;
+  User? player;
+
+  typeSeance? seanceType;
+
+  Sensor(this.uuid, this.macAdress, this.battery, this.batteryIsCharging, this.totalSpace, this.usedSpace);
+
+  Sensor.withUuid(String this.uuid);
+
 
 }

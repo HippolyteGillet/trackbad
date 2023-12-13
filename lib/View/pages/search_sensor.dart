@@ -3,6 +3,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import '../../../Controller/controller.dart';
 import 'dynamic_battery_icon.dart';
+import 'package:collection/collection.dart';
 
 class SearchSensor extends StatefulWidget {
   const SearchSensor({super.key});
@@ -30,10 +31,7 @@ class _SearchSensorState extends State<SearchSensor> {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
-    final enabledSensors = controller.model.sensorsEnable;
-    final connectedSensors = controller.model.sensorsConnected.map((connectedSensor) => connectedSensor.sensor).toList();
-
-    final combinedSensors = enabledSensors + connectedSensors;
+    final sensors = controller.model.sensors.where((s) => s?.isActif == false).toList();
 
     return Container(
       margin: const EdgeInsets.only(top: 10),
@@ -70,7 +68,7 @@ class _SearchSensorState extends State<SearchSensor> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: _refreshSensors,
-              child: combinedSensors.isEmpty
+              child: sensors.isEmpty
                   ? SingleChildScrollView(
                       physics: AlwaysScrollableScrollPhysics(),
                       child: Container(
@@ -89,35 +87,28 @@ class _SearchSensorState extends State<SearchSensor> {
                       ),
                     )
                   : ListView.builder(
-                      shrinkWrap: true, // Ajoutez cette ligne
-                      itemCount: combinedSensors.length,
+                      shrinkWrap: true,
+                      itemCount: sensors.length,
                       itemBuilder: (context, index) {
-                        final sensor = combinedSensors[index];
-                        final name = sensor.uuid;
-// Check if the sensor is connected
-                        final isSensorConnected = controller.model.sensorsConnected.any((s) => s.sensor.uuid == name);
+                      final sensor = sensors[index];
+                      final name = sensor?.uuid;
+                      final batteryLevel = sensor?.battery;
 
-                        // Get the battery level only if the sensor is connected
-                        int? batteryLevel;
-                        if (isSensorConnected) {
-                          final connectedSensor = controller.model.sensorsConnected.firstWhere((s) => s.sensor.uuid == name);
-                          batteryLevel = connectedSensor.battery;
-                        }
                         return Card(
-                          color: isSensorConnected ? Colors.orange : Colors.white,
+                          color:  sensor!.isConnected? Colors.orange : Colors.white,
                           shadowColor: Colors.grey[200],
                           elevation: 3,
                           child: ListTile(
                             onTap: () {
                               final controller = Provider.of<Controller>(context, listen: false);
-                              if(!isSensorConnected){
-                                controller.connectSensor(name);
-                              }else {
-                                controller.disconnectSensor(name);
+                              if(sensor.isConnected){
+                                controller.disconnectSensor(sensor.uuid!);
+                              }else{
+                                controller.connectSensor(sensor.uuid!);
                               }
                             },
                             title: Text(
-                              name,
+                              name!,
                               style: const TextStyle(
                                 fontFamily: 'LeagueSpartan',
                                 fontWeight: FontWeight.w900,
@@ -126,7 +117,7 @@ class _SearchSensorState extends State<SearchSensor> {
                             ),
                             subtitle: Row(
                               children: [
-                                if(isSensorConnected) ...[
+                                if(batteryLevel != null) ...[
                                   DynamicBatteryIcon(
                                     batteryLevel: int.parse('$batteryLevel'),
                                   ),
