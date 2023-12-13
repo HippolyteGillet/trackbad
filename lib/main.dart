@@ -5,7 +5,7 @@ import 'package:trackbad/Model/model.dart';
 import 'package:trackbad/Model/User.dart';
 
 
-void main() {
+Future<void> main() async {
   final model = ApplicationModel();
   model.ajouterUtilisateur("Elie BIME", 1);
   model.ajouterUtilisateur("Pag ZERRRR", 2);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trackbad/View/pages/add_sensor_page.dart';
 import 'ongoing_session_page.dart';
+import 'package:provider/provider.dart';
+import '../../Controller/controller.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({super.key});
@@ -10,16 +12,17 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPageState extends State<TrainingPage> {
-  List<Map<String, dynamic>> sensors = [];
 
-  void _addSensor(Map<String, dynamic> newSensor) {
-    setState(() {
-      sensors.add(newSensor);
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+    List<Map<String, dynamic>> sensors = controller.model.sensors.where((s) => s?.isActif == true).map((s) => {
+      'name': s?.player?.nom ?? '',
+      'sensor': s?.macAdress ?? '',
+    }).toList();
+
     return Column(
       children: [
         const Padding(padding: EdgeInsets.only(top: 80)),
@@ -51,14 +54,10 @@ class _TrainingPageState extends State<TrainingPage> {
             icon: const Icon(Icons.add_circle,
                 color: Color.fromRGBO(240, 54, 18, 1), size: 45),
             onPressed: () async {
-              final result = await Navigator.push<Map<String, dynamic>>(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddSensorPage(onAdd: _addSensor)),
-              );
-              if (result != null) {
-                _addSensor(result);
-              }
+              await Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => const AddSensorPage()));
             },
           )
         ]),
@@ -124,12 +123,17 @@ class _TrainingPageState extends State<TrainingPage> {
                 ))),
         const Padding(padding: EdgeInsets.only(top: 15)),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            await controller.startTraining();
+
+            if (!mounted) return;
+
             Navigator.push(
                 context,
                 PageRouteBuilder(
                     pageBuilder: (_, __, ___) => const OngoingSessionPage()));
           },
+
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
             minimumSize: const Size(250, 60),

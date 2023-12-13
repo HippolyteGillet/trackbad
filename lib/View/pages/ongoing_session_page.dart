@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trackbad/View/pages/loading_file_page.dart';
+import 'package:provider/provider.dart';
+import '../../Controller/controller.dart';
 
 class OngoingSessionPage extends StatefulWidget {
   const OngoingSessionPage({super.key});
@@ -11,6 +13,8 @@ class OngoingSessionPage extends StatefulWidget {
 class _OngoingSessionPageState extends State<OngoingSessionPage> {
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -31,7 +35,11 @@ class _OngoingSessionPageState extends State<OngoingSessionPage> {
           const Padding(padding: EdgeInsets.only(top: 150)),
           Center(
               child: ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              await controller.stopTraining();
+
+              if (!mounted) return;
+
               Navigator.push(
                   context,
                   PageRouteBuilder(

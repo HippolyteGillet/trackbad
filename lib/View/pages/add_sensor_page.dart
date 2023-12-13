@@ -8,33 +8,13 @@ import 'package:provider/provider.dart';
 import '../../Controller/controller.dart';
 
 class AddSensorPage extends StatefulWidget {
-  final Function(Map<String, dynamic>) onAdd;
-
-  const AddSensorPage({Key? key, required this.onAdd}) : super(key: key);
+  const AddSensorPage({Key? key}) : super(key: key);
 
   @override
   State<AddSensorPage> createState() => _AddSensorPageState();
 }
 
 class _AddSensorPageState extends State<AddSensorPage> {
-  Map<String, dynamic>? selectedSensor;
-  Map<String, dynamic>? selectedPlayer;
-
-  void _handleAddSensor() {
-    Map<String, dynamic> newSensorData = {
-      'name': selectedPlayer!['name'],
-      'sensor': selectedSensor!['name'],
-    };
-    Navigator.of(context).pop(newSensorData);
-  }
-
-  void _handleSensorSelected(Map<String, dynamic> sensor) {
-    selectedSensor = sensor;
-  }
-
-  void _handlePlayerSelected(Map<String, dynamic> sensor) {
-    selectedPlayer = sensor;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +39,7 @@ class _AddSensorPageState extends State<AddSensorPage> {
                 fontWeight: FontWeight.w900,
                 fontSize: 30,
               )),
-          SearchSensor(
-            onSensorSelected: _handleSensorSelected,
-          ),
+          const SearchSensor(),
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -77,9 +55,7 @@ class _AddSensorPageState extends State<AddSensorPage> {
               ),
             ),
           ),
-          LinkPlayerToSensor(
-            onPlayerSelected: _handlePlayerSelected,
-          ),
+          const LinkPlayerToSensor(),
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -107,7 +83,11 @@ class _AddSensorPageState extends State<AddSensorPage> {
               var connectedSensor = controller.model.sensors.firstWhereOrNull((s) => s!.isConnected);
               if (connectedSensor?.isActif == true) {
                 // Naviguer vers NavbarEvents si le capteur est actif
-                _handleAddSensor();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NavbarEvents()),
+                  (route) => false,
+                );
               }
             },
             style: ElevatedButton.styleFrom(

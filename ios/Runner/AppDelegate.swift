@@ -112,7 +112,7 @@ import MovellaDotSdk
     
     
     private func handleStartRecording(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        if let args = call.arguments as? String, let device = deviceList.first(where: { $0.uuid == args }) {
+        if let args = call.arguments as? String, let device = connectedDeviceList.first(where: { $0.uuid == args }) {
             device.startRecording(0xFFFF)
             print("Starting recording for sensor: \(device.uuid)")
             result(true)
@@ -125,7 +125,7 @@ import MovellaDotSdk
 
     func handleStopRecordingAndExportData(call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? String,
-              let device = deviceList.first(where: { $0.uuid == args }) else {
+              let device = connectedDeviceList.first(where: { $0.uuid == args }) else {
             print("Failed to stop recording: Device not found")
             result(FlutterError(code: "DEVICE_NOT_FOUND", message: "Device not found", details: nil))
             return

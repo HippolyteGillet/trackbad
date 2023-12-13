@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import '../../../Controller/controller.dart';
 import 'dynamic_battery_icon.dart';
-import 'package:collection/collection.dart';
 
 class SearchSensor extends StatefulWidget {
   const SearchSensor({super.key});
@@ -13,19 +14,24 @@ class SearchSensor extends StatefulWidget {
 }
 
 class _SearchSensorState extends State<SearchSensor> {
+  Timer? _scanTimer;
 
   @override
   void initState() {
     super.initState();
-    _startRefreshTimer();
+    _startScanTimer();
+  }
+
+  void _startScanTimer() {
+    _scanTimer = Timer.periodic(const Duration(seconds: 4), (Timer t) {
+      _refreshSensors();
+    });
   }
 
   @override
   void dispose() {
+    _scanTimer?.cancel(); // Arrêter le timer lorsque la page est fermée
     super.dispose();
-    // Arrêter le timer
-    final controller = Provider.of<Controller>(context, listen: false);
-    controller.stopSensorRefreshTimer();
   }
 
   @override
@@ -99,12 +105,14 @@ class _SearchSensorState extends State<SearchSensor> {
                           shadowColor: Colors.grey[200],
                           elevation: 3,
                           child: ListTile(
-                            onTap: () {
+                            onTap: () async{
                               final controller = Provider.of<Controller>(context, listen: false);
                               if(sensor.isConnected){
                                 controller.disconnectSensor(sensor.uuid!);
                               }else{
-                                controller.connectSensor(sensor.uuid!);
+                                _scanTimer?.cancel();
+                                await controller.connectSensor(sensor.uuid!);
+                                _startScanTimer();
                               }
                             },
                             title: Text(
@@ -155,12 +163,5 @@ class _SearchSensorState extends State<SearchSensor> {
     final controller = Provider.of<Controller>(context, listen: false);
     // Appeler la méthode pour scanner les capteurs
     await controller.getSensors();
-  }
-
-  void _startRefreshTimer() {
-    // Accéder à l'instance du contrôleur via Provider
-    final controller = Provider.of<Controller>(context, listen: false);
-    // Démarrer le timer
-    controller.startSensorRefreshTimer();
   }
 }
