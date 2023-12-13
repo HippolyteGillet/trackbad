@@ -14,17 +14,7 @@ void main() {
   myConnection.initializeSupabase();
   final supabase = Supabase.Supabase.instance.client;
 
-  Users users = Users();
-  users.setUserData(supabase);
-
-  // Vous pouvez également imprimer ou utiliser ces données comme nécessaire
-  for (int i = 0; i < users.lastname.length; i++) {
-    print('COUCOU');
-    print('Player $i:');
-    print('  Lastname: ${users.lastname[i]}');
-    print('  Firstname: ${users.firstname[i]}');
-    print('  ID: ${users.id[i]}');
-  }
+  Users users = Users(supabase);
 
   final model = ApplicationModel();
   model.ajouterUtilisateur("Elie BIME", 1);
