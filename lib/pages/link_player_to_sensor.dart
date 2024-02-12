@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class LinkPlayerToSensor extends StatefulWidget {
   final void Function(Map<String, dynamic> sensor) onPlayerSelected;
-  const LinkPlayerToSensor({Key? key, required this.onPlayerSelected}) : super(key: key);
+  const LinkPlayerToSensor({Key? key, required this.onPlayerSelected})
+      : super(key: key);
 
   @override
   State<LinkPlayerToSensor> createState() => _LinkPlayerToSensorState();
@@ -14,13 +15,17 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
   Widget buildButton(String text) {
     bool isSelected = _selectedButton == text;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      // Add some space between buttons
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isSelected ? Colors.yellow : Colors.blue,
           foregroundColor: Colors.white,
-          shape: const StadiumBorder(), // Circular border
+          backgroundColor: isSelected ? const Color(0xFFF7D101) : const Color(0xFF222FE6),
+          textStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          shape: const StadiumBorder(),
         ),
         onPressed: () {
           setState(() {
@@ -29,12 +34,7 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
           widget.onPlayerSelected({'name': text});
         },
         child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected
-                ? Colors.black
-                : Colors.white, // Text color based on selection
-          ),
+          text.toUpperCase(),
         ),
       ),
     );
@@ -42,15 +42,28 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.yellow,
-      width: 360,
-      height: 100,
-      child: ListView(
+    return SizedBox(
+      width: double.infinity,
+      height: 120,
+      child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        children: <String>['Elie BIME', 'Paul BOULET', 'Hippolyte GILLET']
-            .map((String name) => buildButton(name))
-            .toList(),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: -2.0,
+          runSpacing: -6.0,
+          children: [
+            'Elie BIME',
+            'Paul BOULET',
+            'Hippolyte GILLET',
+            'Kenza ERRAJI',
+            'Jacques MEYER',
+            'Elie BIE',
+            'Paul BULET',
+            'Hippoyte GILLET',
+            'Kenz ERRAJI',
+            'Jacues MEYER',
+          ].map((String name) => buildButton(name)).toList(),
+        ),
       ),
     );
   }
