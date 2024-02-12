@@ -4,12 +4,15 @@ import MovellaDotSdk
 
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate{
+    private var connectionResult: FlutterResult?
+    private var connectionDeviceUuid: String?
     private var deviceList: [DotDevice] = []
     private var connectedDeviceList: [DotDevice] = []
     private var plotDataList: [DotPlotData] = []
     private let dataAccessQueue = DispatchQueue(label: "com.connexion_capteur.dataAccessQueue")
     private let exportGroup = DispatchGroup()
+
 
     override func application(
         _ application: UIApplication,
@@ -73,21 +76,16 @@ import MovellaDotSdk
             DotDevicePool.bindDevice(deviceToConnect)
             print("Connecting to sensor: \(deviceToConnect.uuid)")
 
-            // Delay to allow sensor initialization
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { // Adjust delay as needed
-                let connectionDetails = [
-                    "macAdress": deviceToConnect.macAddress,
-                    "battery": deviceToConnect.battery?.description,
-                    "totalSpace": deviceToConnect.totalSpace,
-                    "usedSpace": deviceToConnect.usedSpace
-                ]
-                result(connectionDetails)
-            }
+            // Set a listener for the connection success
+            DotConnectionManager.setConnectionDelegate(self)
+            self.connectionResult = result
+            self.connectionDeviceUuid = deviceToConnect.uuid
         } else {
             print("Failed to connect to sensor")
             result(FlutterError(code: "UNAVAILABLE", message: "Sensor not available or connection failed", details: nil))
         }
     }
+    
 
     
     private func handleDisconnectSensor(call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -196,23 +194,42 @@ import MovellaDotSdk
            print("Démarrage de l'exportation des données")
 
            // Définir le bloc de rappel pour les données exportées
-           device.setDidParseExportFileDataBlock { plotData in
-               print("Données exportées: \(plotData)")
-
-               //self.saveExportedDataToFirestore(plotData: plotData)
+        device.setDidParseExportFileDataBlock { [weak self] plotData in
+                guard let self = self else { return }
+                // Sérialisation des données exportées
+                let serializedData = self.serializePlotData(plotData)
+                // Envoi des données sérialisées à Flutter
+                self.sendDataToFlutter(data: serializedData)
            }
 
            // Définir le bloc de rappel pour la vérification de l'état de l'exportation
-           device.recording.exportFileDone = { index, allFilesDone in
-               if allFilesDone {
-                   print("Tous les fichiers ont été exportés.")
-                   self.stopDataExportSequence(for: device)
-                   result(true)
-               } else {
-                   print("Fichier à l'index \(index) exporté.")
-               }
-           }
+        device.recording.exportFileDone = { [weak self] index, allFilesDone in
+                if allFilesDone {
+                    print("Tous les fichiers ont été exportés.")
+                    self?.stopDataExportSequence(for: device)
+                    DispatchQueue.main.async {
+                        result(true) // Informer Flutter que l'exportation est terminée
+                    }
+                } else {
+                    print("Fichier à l'index \(index) exporté.")
+                }
+            }
        }
+    
+    func serializePlotData(_ plotData: DotPlotData) -> String {
+        // Exemple de sérialisation simplifiée. Adaptez selon vos données spécifiques.
+        let serialized = "{\"timeStamp\": \(plotData.timeStamp), \"accelerationX\": \(plotData.acc0), \"accelerationY\": \(plotData.acc1), \"accelerationZ\": \(plotData.acc2)}"
+        return serialized
+    }
+
+    func sendDataToFlutter(data: String) {
+        guard let controller = window?.rootViewController as? FlutterViewController else {
+            print("RootViewController is not a FlutterViewController")
+            return
+        }
+        let channel = FlutterMethodChannel(name: "com.example.movella_dot/data", binaryMessenger: controller.binaryMessenger)
+        channel.invokeMethod("receiveData", arguments: data)
+    }
 
        func stopDataExportSequence(for device: DotDevice) {
            if device.stopExportFileData() {
@@ -221,6 +238,7 @@ import MovellaDotSdk
                print("Échec de l'arrêt de l'exportation des données pour le capteur: \(device.uuid)")
            }
        }
+
 
     func shareExportedData(_ fileURL: URL) {
         let activityViewController = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
@@ -290,5 +308,31 @@ extension AppDelegate: DotConnectionDelegate {
         // Logic when a sensor is disconnected
     }
 
-    // Other DotConnectionDelegate methods if needed
-}
+    func onDeviceConnectSucceeded(_ device: DotDevice) {
+        if device.uuid == connectionDeviceUuid {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { // Attendre 1 seconde
+                // Envoyer les détails de la connexion à Flutter
+                let connectionDetails = [
+                    "macAddress": device.macAddress,
+                    "battery": device.battery?.description(),
+                    "totalSpace": device.totalSpace,
+                    "usedSpace": device.usedSpace,
+                ] as [String : Any]
+                self.connectionResult?(connectionDetails)
+                // Réinitialiser les propriétés
+                self.connectionResult = nil
+                self.connectionDeviceUuid = nil
+            }
+        }
+    }
+
+    func onDeviceConnectFailed(_ device: DotDevice) {
+        if device.uuid == connectionDeviceUuid {
+            // Envoyer un message d'erreur à Flutter
+            connectionResult?(FlutterError(code: "CONNECTION_FAILED", message: "Failed to connect to sensor", details: nil))
+            // Réinitialiser les propriétés
+            connectionResult = nil
+            connectionDeviceUuid = nil
+        }
+    }}
+

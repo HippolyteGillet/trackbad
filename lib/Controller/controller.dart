@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../Model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,11 +9,42 @@ import '../Model/Sensor.dart';
 import 'dart:async';
 
 class Controller with ChangeNotifier {
+  bool isConnecting = false;
+  bool isExporting = false;
+
   final ApplicationModel model;
 
-  Controller({required this.model});
+  Controller({required this.model}){
+    initialize();
+  }
 
   static const platform = MethodChannel('com.example.movella_dot/sensors');
+
+  static const platformData = MethodChannel('com.example.movella_dot/data');
+
+  void initialize() {
+    platformData.setMethodCallHandler(_handleMethod);
+  }
+
+
+  Future<dynamic> _handleMethod(MethodCall call) async {
+    switch (call.method) {
+      case 'receiveData':
+        final String dataJson = call.arguments;
+        final Map<String, dynamic> dataMap = jsonDecode(dataJson);
+        //print("Données reçues de iOS: $dataMap");
+        // Traitez ou utilisez les données reçues ici
+
+        // Mettre isExporting à false une fois que les données sont reçues
+        isExporting = false;
+        notifyListeners(); // Notifier les observateurs du changement
+
+        break;
+      default:
+        print('Méthode non gérée');
+    }
+  }
+
 
   Widget get homeWidget => LogPage(model: model);
 
@@ -44,6 +77,8 @@ class Controller with ChangeNotifier {
   }
 
   Future<void> connectSensor(String sensorUuid) async {
+    isConnecting = true;
+    notifyListeners();
     try {
       // Disconnect any currently connected sensor
       var currentlyConnectedSensor =
@@ -60,7 +95,7 @@ class Controller with ChangeNotifier {
       model.sensors
           .where((element) => element?.uuid == sensorUuid)
           .first
-          ?.macAdress = result['macAdress'];
+          ?.macAdress = result['macAddress'];
 
       String batteryDescription =
           result['battery'] ?? "Battery:(Uncharged, 100%)";
@@ -90,6 +125,9 @@ class Controller with ChangeNotifier {
       notifyListeners();
     } on PlatformException catch (e) {
       print("Failed to connect the sensor: '${e.message}'");
+    } finally {
+      isConnecting = false;
+      notifyListeners();
     }
   }
 
@@ -110,6 +148,26 @@ class Controller with ChangeNotifier {
       final bool result =
           await platform.invokeMethod('disconnectSensor', sensorUuid);
       if (result) {
+        model.sensors
+            .where((element) => element?.uuid == sensorUuid)
+            .first
+            ?.isConnected = false;
+        model.sensors
+            .where((element) => element?.uuid == sensorUuid)
+            .first
+            ?.isActif = false;
+        model.sensors
+            .where((element) => element?.uuid == sensorUuid)
+            .first
+            ?.player = null;
+        model.sensors
+            .where((element) => element?.uuid == sensorUuid)
+            .first
+            ?.seanceType = null;
+        model.users
+            .where((element) => element.isActif == true)
+            .first
+            .isActif = false;
         model.removeSensorWithUuid(sensorUuid);
         notifyListeners();
       }
@@ -123,7 +181,6 @@ class Controller with ChangeNotifier {
     if (connectedSensor != null &&
         model.sensors.firstWhereOrNull((s) => s!.isConnected)?.isActif ==
             false) {
-      model.users.firstWhereOrNull((u) => u.nom == player)?.isActif = true;
       model.sensors.firstWhereOrNull((s) => s!.isConnected)?.player =
           model.users.firstWhereOrNull((u) => u.nom == player);
       notifyListeners();
@@ -189,10 +246,14 @@ class Controller with ChangeNotifier {
     try {
       var activeSensor = model.sensors.firstWhereOrNull((s) => s!.isActif);
       if (activeSensor != null) {
+        isExporting = true;
+        notifyListeners();
+
         await platform.invokeMethod('stopRecordingAndExportData', activeSensor.uuid);
       }
     } on PlatformException catch (e) {
       print("Failed to stop recording: '${e.message}'");
     }
+
   }
 }

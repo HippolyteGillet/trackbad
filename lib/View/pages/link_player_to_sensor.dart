@@ -55,14 +55,16 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
-    final names = controller.model.users.map((user) => user.nom).toList();
+    // Filtrer les utilisateurs inactifs avant de construire les boutons
+    final inactiveUserNames = controller.model.users.where((user) => !user.isActif).map((user) => user.nom).toList();
+
     return Container(
       color: Colors.yellow,
       width: 360,
       height: 100,
       child: ListView(
         scrollDirection: Axis.vertical,
-        children: names.map((String name) => buildButton(name, controller)).toList(),
+        children: inactiveUserNames.map((String name) => buildButton(name, controller)).toList(),
       ),
     );
   }
