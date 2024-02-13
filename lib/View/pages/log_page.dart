@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:trackbad/View/pages/connexion_page.dart';
 import 'package:trackbad/View/pages/navbar_event.dart';
-import '../../Model/model.dart';
 
 class LogPage extends StatefulWidget {
-  final ApplicationModel model;
-
-  const LogPage({required this.model});
+  const LogPage({super.key});
 
   @override
   State<LogPage> createState() => _LogPageState();
@@ -33,7 +31,7 @@ class _LogPageState extends State<LogPage> {
                 Navigator.push(
                     context,
                     PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => const NavbarEvents()));
+                        pageBuilder: (_, __, ___) => const ConnexionPage()));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromRGBO(240, 54, 18, 1),

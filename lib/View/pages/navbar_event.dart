@@ -38,6 +38,7 @@ class _NavbarEventsState extends State<NavbarEvents> {
               _currentIndex = index;
             });
           },
+          overlayColor: MaterialStateProperty.all(Colors.transparent),
           backgroundColor: Colors.black,
           destinations: <NavigationDestination>[
             NavigationDestination(

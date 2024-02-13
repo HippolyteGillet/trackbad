@@ -1,54 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:trackbad/Model/Sensor.dart';
-import '../../../Controller/controller.dart';
 
 class LinkSessionTypeToSensor extends StatefulWidget {
-  const LinkSessionTypeToSensor({super.key});
+  final void Function(Map<String, dynamic> sensor) onSessionTypeSelected;
+  const LinkSessionTypeToSensor({Key? key, required this.onSessionTypeSelected})
+      : super(key: key);
 
   @override
-  State<LinkSessionTypeToSensor> createState() => _LinkSessionTypeToSensorState();
+  State<LinkSessionTypeToSensor> createState() =>
+      _LinkSessionTypeToSensorState();
 }
 
 class _LinkSessionTypeToSensorState extends State<LinkSessionTypeToSensor> {
   String _selectedButton = '';
 
-  Widget buildButton(String text, Controller controller) {
+  Widget buildButton(String text) {
     bool isSelected = _selectedButton == text;
-    bool isSensorAvailable = controller.model.sensors.where((s) => s?.isConnected == true && s?.isActif == false).isNotEmpty;
-
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      // Add some space between buttons
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isSelected ? Colors.yellow : Colors.blue, // Background color
-          foregroundColor: Colors.white, // Text Color (Foreground color)
-          shape: const StadiumBorder(), // Circular border
+          foregroundColor: Colors.white,
+          backgroundColor:
+              isSelected ? const Color(0xFFF7D101) : const Color(0xFF222FE6),
+          textStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          shape: const StadiumBorder(),
         ),
         onPressed: () {
           setState(() {
-            if (!isSensorAvailable) {
-              // Si aucun capteur n'est disponible, ne rien faire
-              return;
-            }
-
-            if (_selectedButton == text) {
-              _selectedButton = ''; // Deselect if already selected
-            } else {
-              _selectedButton = text;
-              typeSeance type = text == typeSeance.Entrainement.stringValue ? typeSeance.Entrainement : typeSeance.Match;
-              controller.setSeanceType(type); // Update in controller
-            }
+            _selectedButton = text;
           });
+          widget.onSessionTypeSelected({'name': text});
         },
         child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected
-                ? Colors.black
-                : Colors.white, // Text color based on selection
-          ),
+          text.toUpperCase(),
         ),
       ),
     );
@@ -56,17 +44,21 @@ class _LinkSessionTypeToSensorState extends State<LinkSessionTypeToSensor> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<Controller>(context);
-
-    return Container(
-      color: Colors.yellow,
-      width: 360,
+    return SizedBox(
+      width: double.infinity,
       height: 100,
-      child: ListView(
-        scrollDirection: Axis.vertical, // Scroll horizontally
-        children: <String>[typeSeance.Entrainement.stringValue, typeSeance.Match.stringValue]
-            .map((String name) => buildButton(name, controller))
-            .toList(),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: -2.0,
+          runSpacing: -6.0,
+          children: [
+            'Entrainement',
+            'Match',
+            'Physique',
+          ].map((String name) => buildButton(name)).toList(),
+        ),
       ),
     );
   }
