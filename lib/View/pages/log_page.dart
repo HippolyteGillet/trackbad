@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trackbad/pages/connexion_page.dart';
-import 'package:trackbad/pages/navbar_event.dart';
+import 'package:trackbad/View/pages/connexion_page.dart';
+import 'package:trackbad/View/pages/navbar_event.dart';
 
 class LogPage extends StatefulWidget {
   const LogPage({super.key});

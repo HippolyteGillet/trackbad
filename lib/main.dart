@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trackbad/pages/log_page.dart';
+import 'package:trackbad/View/pages/log_page.dart';
 
 
 void main() {

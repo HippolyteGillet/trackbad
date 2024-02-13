@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:trackbad/pages/profil_page.dart';
-import 'package:trackbad/pages/stats_page.dart';
-import 'package:trackbad/pages/training_page.dart';
+import 'package:trackbad/View/pages/profil_page.dart';
+import 'package:trackbad/View/pages/stats_page.dart';
+import 'package:trackbad/View/pages/training_page.dart';
 
 class NavbarEvents extends StatefulWidget {
   const NavbarEvents({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trackbad/pages/loading_file_page.dart';
+import 'package:trackbad/View/pages/loading_file_page.dart';
 
 class OngoingSessionPage extends StatefulWidget {
   const OngoingSessionPage({super.key});

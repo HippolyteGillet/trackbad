@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trackbad/pages/add_sensor_page.dart';
+import 'package:trackbad/View/pages/add_sensor_page.dart';
 import 'ongoing_session_page.dart';
 
 class TrainingPage extends StatefulWidget {

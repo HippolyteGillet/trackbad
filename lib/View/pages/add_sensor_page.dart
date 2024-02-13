@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trackbad/pages/link_player_to_sensor.dart';
-import 'package:trackbad/pages/search_sensor.dart';
+import 'package:trackbad/View/pages/link_player_to_sensor.dart';
+import 'package:trackbad/View/pages/search_sensor.dart';
 import 'link_session_type_to_sensor.dart';
 
 class AddSensorPage extends StatefulWidget {
