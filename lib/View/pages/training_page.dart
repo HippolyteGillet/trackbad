@@ -130,7 +130,7 @@ class _TrainingPageState extends State<TrainingPage> {
                               const Padding(padding: EdgeInsets.only(top: 25)),
                               FittedBox(
                                 child: Text(
-                                  sensor['name'].split(" ")[0], // Prénom
+                                  sensor.player!.nom.split(" ")[0], // Prénom
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -140,7 +140,7 @@ class _TrainingPageState extends State<TrainingPage> {
                               ),
                               FittedBox(
                                 child:Text(
-                                  sensor['name'].split(" ").sublist(1).join(" "), // Nom de famille
+                                  sensor.player!.nom.split(" ").sublist(1).join(" "), // Nom de famille
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,

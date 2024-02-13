@@ -120,7 +120,7 @@ class _AddSensorPageState extends State<AddSensorPage> {
                   },
                 );
               }else{
-                _handleAddSensor();
+                _handleAddSensor(controller);
                 Navigator.pop(context);
               }
             },
