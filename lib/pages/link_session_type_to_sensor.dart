@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LinkSessionTypeToSensor extends StatefulWidget {
-  const LinkSessionTypeToSensor({super.key});
+  final void Function(Map<String, dynamic> sensor) onSessionTypeSelected;
+  const LinkSessionTypeToSensor({Key? key, required this.onSessionTypeSelected})
+      : super(key: key);
 
   @override
   State<LinkSessionTypeToSensor> createState() =>
@@ -31,6 +33,7 @@ class _LinkSessionTypeToSensorState extends State<LinkSessionTypeToSensor> {
           setState(() {
             _selectedButton = text;
           });
+          widget.onSessionTypeSelected({'name': text});
         },
         child: Text(
           text.toUpperCase(),
@@ -41,7 +44,7 @@ class _LinkSessionTypeToSensorState extends State<LinkSessionTypeToSensor> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 100,
       child: SingleChildScrollView(
