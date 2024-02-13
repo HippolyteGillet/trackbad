@@ -18,6 +18,12 @@ class _TrainingPageState extends State<TrainingPage> {
     });
   }
 
+  void _removeSensor(Map<String, dynamic> sensor) {
+    setState(() {
+      sensors.remove(sensor);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -63,65 +69,107 @@ class _TrainingPageState extends State<TrainingPage> {
           )
         ]),
         SizedBox(
-            width: 320,
-            height: 335,
-            child: SingleChildScrollView(
-                padding: const EdgeInsets.only(top: 25),
-                child: Wrap(
-                  spacing: 5.0, // Espace horizontal entre les cartes
-                  runSpacing: 30.0, // Espace vertical entre les lignes
-                  children: sensors.map((sensor) {
-                    // Remplacez 'sensors' par votre liste de données
-                    return SizedBox(
-                      width: 100,
-                      child: Card(
-                        color: const Color.fromRGBO(34, 47, 230, 1),
-                        elevation: 3,
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          alignment: Alignment.center,
-                          children: <Widget>[
-                            const Positioned(
-                              top: -25,
-                              child: CircleAvatar(
-                                radius: 25, // La taille de l'avatar
-                                backgroundColor: Colors.lightBlueAccent,
-                                child: Icon(Icons.person, size: 25),
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                const Padding(
-                                    padding: EdgeInsets.only(top: 25)),
-                                Text(
-                                  sensor['name'],
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const Padding(padding: EdgeInsets.only(top: 3)),
-                                Text(
-                                  '${sensor['sensor']}',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                const Padding(
-                                    padding: EdgeInsets.only(top: 10)),
+          width: 320,
+          height: 335,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(top: 25),
+            child: Wrap(
+              spacing: 5.0, // Espace horizontal entre les cartes
+              runSpacing: 30.0, // Espace vertical entre les lignes
+              children: sensors.map((sensor) {
+                // Remplacez 'sensors' par votre liste de données
+                return SizedBox(
+                  width: 100,
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          // Pop-up d'informations sur le capteur
+                          return AlertDialog(
+                            title: Text(sensor['name']),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text('Nom: ${sensor['name']}'),
+                                const SizedBox(height: 8.0),
+                                Text('Capteur: ${sensor['sensor']}'),
+                                const SizedBox(height: 8.0),
+                                Text("Type de séance: ${sensor['type']}"),
+                                // Ajoutez plus d'informations ici
                               ],
-                            )
-                          ],
-                        ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Déconnecter',
+                                    style: TextStyle(color: Colors.red)),
+                                onPressed: () {
+                                  _removeSensor(sensor);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Fermer'),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // Ferme la boîte de dialogue
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Card(
+                      color: const Color.fromRGBO(34, 47, 230, 1),
+                      elevation: 3,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          const Positioned(
+                            top: -25,
+                            child: CircleAvatar(
+                              radius: 25, // La taille de l'avatar
+                              backgroundColor: Colors.lightBlueAccent,
+                              child: Icon(Icons.person, size: 25),
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              const Padding(padding: EdgeInsets.only(top: 25)),
+                              Text(
+                                sensor['name'],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const Padding(padding: EdgeInsets.only(top: 3)),
+                              Text(
+                                '${sensor['sensor']}',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                ),
+                              ),
+                              const Padding(padding: EdgeInsets.only(top: 10)),
+                            ],
+                          )
+                        ],
                       ),
-                    );
-                  }).toList(),
-                ))),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
         const Padding(padding: EdgeInsets.only(top: 15)),
         ElevatedButton(
           onPressed: () {
