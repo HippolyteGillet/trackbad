@@ -256,4 +256,26 @@ class Controller with ChangeNotifier {
     }
 
   }
+  //---------------------Login---------------------//
+  Future<void> login(String email, String password) async {
+    for (int i = 0; i < model.users.length; i++) {
+      if (model.users[i].lastname == email && model.users[i].firstname == password){
+        model.users[i].isLog = true;
+        print('Connection');
+        break;
+      }
+    }
+    for (int i = 0; i < model.users.length; i++) {
+      if (model.users[i].isLog == true){
+        print('CONNECTE');
+        break;
+      }
+    }
+  }
+
+  Future<void> Logout() async {
+    model.users.where((element) => element.isLog == true).first.isLog = false;
+  }
+
+
 }
