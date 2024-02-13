@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trackbad/View/pages/loading_file_page.dart';
+import 'package:provider/provider.dart';
+import '../../Controller/controller.dart';
 
 class OngoingSessionPage extends StatefulWidget {
   const OngoingSessionPage({super.key});
@@ -11,6 +13,8 @@ class OngoingSessionPage extends StatefulWidget {
 class _OngoingSessionPageState extends State<OngoingSessionPage> {
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -31,29 +35,31 @@ class _OngoingSessionPageState extends State<OngoingSessionPage> {
           const Padding(padding: EdgeInsets.only(top: 150)),
           Center(
               child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const LoadingFile()));
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
-              minimumSize: const Size(250, 60),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-            ),
-            child: const Text(
-              'Fin de session',
-              style: TextStyle(
-                fontFamily: 'LeagueSpartan',
-                fontWeight: FontWeight.bold,
-                fontSize: 35,
-                color: Colors.white,
-              ),
-            ),
-          ))
+                onPressed: ()  {
+                  controller.stopTraining();
+
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const LoadingFile()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
+                  minimumSize: const Size(250, 60),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+                child: const Text(
+                  'Fin de session',
+                  style: TextStyle(
+                    fontFamily: 'LeagueSpartan',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
+                    color: Colors.white,
+                  ),
+                ),
+              ))
         ],
       ),
     );

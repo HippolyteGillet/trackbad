@@ -12,6 +12,9 @@ class Controller with ChangeNotifier {
   bool isConnecting = false;
   bool isExporting = false;
 
+  int currentProgress = 0;
+  int totalPackets = 0;
+
   final ApplicationModel model;
 
   Controller({required this.model}) {
@@ -27,20 +30,24 @@ class Controller with ChangeNotifier {
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {
-    switch (call.method) {
-      case 'receiveData':
-        final String dataJson = call.arguments;
-        final Map<String, dynamic> dataMap = jsonDecode(dataJson);
-        //print("Données reçues de iOS: $dataMap");
-        // Traitez ou utilisez les données reçues ici
-
-        // Mettre isExporting à false une fois que les données sont reçues
+    if (call.method == 'receiveData') {
+      final data = json.decode(call.arguments);
+      if (data.containsKey('totalPackets')) {
+        totalPackets = data['totalPackets'];
+        currentProgress = 0; // Réinitialiser la progression
+        print('Total packets : $totalPackets');
+        notifyListeners();
+        isExporting = true;
+      } else if (data.containsKey('packetNumber')) {
+        final packetNumber = data['packetNumber'];
+        currentProgress = packetNumber + 1;
+        print('Progression: $currentProgress sur $totalPackets');
+        notifyListeners();
+      } else if (data.containsKey('exportCompleted')) {
+        print('fin de lexport');
         isExporting = false;
         notifyListeners(); // Notifier les observateurs du changement
-
-        break;
-      default:
-        print('Méthode non gérée');
+      }
     }
   }
 
@@ -79,7 +86,6 @@ class Controller with ChangeNotifier {
     return newIndex; // Retourner le plus petit index disponible
   }
 
-
   Future<void> getSensors() async {
     try {
       final List<dynamic> result = await platform.invokeMethod('getSensors');
@@ -89,8 +95,8 @@ class Controller with ChangeNotifier {
       }).toList();
 
       for (var fetchedSensor in fetchedSensors) {
-        var existingSensor = model.sensors
-            .firstWhereOrNull((s) => s.uuid == fetchedSensor.uuid);
+        var existingSensor =
+            model.sensors.firstWhereOrNull((s) => s.uuid == fetchedSensor.uuid);
         if (existingSensor != null) {
           // Update existing sensor data if necessary
         } else {
@@ -188,7 +194,7 @@ class Controller with ChangeNotifier {
       if (result) {
         sensor.isConnected = false;
         sensor.isActif = false;
-        if(sensor.player != null) {
+        if (sensor.player != null) {
           model.users
               .where((element) => element.nom == sensor.player?.nom)
               .first

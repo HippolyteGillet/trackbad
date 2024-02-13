@@ -159,6 +159,7 @@ class _TrainingPageState extends State<TrainingPage> {
         const Padding(padding: EdgeInsets.only(top: 15)),
         ElevatedButton(
           onPressed: () {
+            controller.startTraining();
             Navigator.push(
                 context,
                 PageRouteBuilder(

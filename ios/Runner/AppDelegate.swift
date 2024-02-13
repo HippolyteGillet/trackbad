@@ -192,6 +192,10 @@ import MovellaDotSdk
            }
 
            print("Démarrage de l'exportation des données")
+        // Informer Flutter du nombre total de paquets à exporter
+        let totalPackets = device.recording.files.count
+        sendDataToFlutter(data: "{\"totalPackets\": \(totalPackets)}")
+
 
            // Définir le bloc de rappel pour les données exportées
         device.setDidParseExportFileDataBlock { [weak self] plotData in
@@ -204,17 +208,23 @@ import MovellaDotSdk
 
            // Définir le bloc de rappel pour la vérification de l'état de l'exportation
         device.recording.exportFileDone = { [weak self] index, allFilesDone in
-                if allFilesDone {
+            let totalPackets = device.recording.files.count
+
+            if allFilesDone {
                     print("Tous les fichiers ont été exportés.")
                     self?.stopDataExportSequence(for: device)
                     DispatchQueue.main.async {
-                        result(true) // Informer Flutter que l'exportation est terminée
+                        self?.sendDataToFlutter(data: "{\"exportCompleted\": true}")
                     }
                 } else {
                     print("Fichier à l'index \(index) exporté.")
+                    DispatchQueue.main.async {
+                        self?.sendDataToFlutter(data: "{\"packetNumber\": \(index)}")
+                    }
                 }
             }
        }
+
     
     func serializePlotData(_ plotData: DotPlotData) -> String {
         // Exemple de sérialisation simplifiée. Adaptez selon vos données spécifiques.
