@@ -100,8 +100,29 @@ class _AddSensorPageState extends State<AddSensorPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              _handleAddSensor(controller);
-              Navigator.pop(context);
+              if(selectedSensor == null || selectedPlayer == null || selectedSessionType == null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('Erreur'),
+                      content: const Text('Vous n\'avez pas sélectionné tous les éléments nécessaires pour ajouter un capteur.'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }else{
+                _handleAddSensor();
+                Navigator.pop(context);
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(240, 54, 18, 1),

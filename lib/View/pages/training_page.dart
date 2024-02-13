@@ -57,7 +57,7 @@ class _TrainingPageState extends State<TrainingPage> {
           )
         ]),
         SizedBox(
-          width: 320,
+          width: 350,
           height: 335,
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(top: 25),
@@ -66,7 +66,8 @@ class _TrainingPageState extends State<TrainingPage> {
               runSpacing: 30.0, // Espace vertical entre les lignes
               children: sensors.map((sensor) {
                 return SizedBox(
-                  width: 100,
+                  width: 110,
+                  height: 100,
                   child: GestureDetector(
                     onTap: () {
                       showDialog(
@@ -81,6 +82,7 @@ class _TrainingPageState extends State<TrainingPage> {
                               children: <Widget>[
                                 Text('Joueur : ${sensor?.player?.nom}'),
                                 const SizedBox(height: 8.0),
+                                Text("Batterie: ${sensor?.battery}%"),
                                 Text('Capteur : ${sensor?.uuid}'),
                                 const SizedBox(height: 8.0),
                                 Text("Type de séance : ${sensor?.seanceType.toString()}"),
@@ -123,25 +125,40 @@ class _TrainingPageState extends State<TrainingPage> {
                             ),
                           ),
                           Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               const Padding(padding: EdgeInsets.only(top: 25)),
-                              Text(
-                                sensor?.player?.nom ?? "Inconnu",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                              FittedBox(
+                                child: Text(
+                                  sensor['name'].split(" ")[0], // Prénom
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
+                              FittedBox(
+                                child:Text(
+                                  sensor['name'].split(" ").sublist(1).join(" "), // Nom de famille
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
                               const Padding(padding: EdgeInsets.only(top: 3)),
-                              Text(
-                                '${sensor?.name}',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
+                              FittedBox(
+                                child: Text(
+                                  '${sensor?.name}',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 8,
+                                  ),
                                 ),
                               ),
                               const Padding(padding: EdgeInsets.only(top: 10)),
@@ -159,7 +176,6 @@ class _TrainingPageState extends State<TrainingPage> {
         const Padding(padding: EdgeInsets.only(top: 15)),
         ElevatedButton(
           onPressed: () {
-            controller.startTraining();
             Navigator.push(
                 context,
                 PageRouteBuilder(
