@@ -5,7 +5,7 @@ import 'User.dart';
 
 
 class ApplicationModel with ChangeNotifier{
-  List<Sensor?> sensors = [];
+  List<Sensor> sensors = [];
   List<User> users = [];
 
   void ajouterUtilisateur(String nom, int id) {
@@ -22,7 +22,7 @@ class ApplicationModel with ChangeNotifier{
   }
 
   void removeSensorWithUuid(String uuid) {
-    sensors.removeWhere((s) => s?.uuid == uuid);
+    sensors.removeWhere((s) => s.uuid == uuid);
   }
 
 

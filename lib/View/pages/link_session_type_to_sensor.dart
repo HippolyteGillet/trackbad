@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:trackbad/Model/Sensor.dart';
 
 class LinkSessionTypeToSensor extends StatefulWidget {
-  final void Function(Map<String, dynamic> sensor) onSessionTypeSelected;
+  final void Function(typeSeance sensor) onSessionTypeSelected;
   const LinkSessionTypeToSensor({Key? key, required this.onSessionTypeSelected})
       : super(key: key);
 
@@ -33,7 +34,9 @@ class _LinkSessionTypeToSensorState extends State<LinkSessionTypeToSensor> {
           setState(() {
             _selectedButton = text;
           });
-          widget.onSessionTypeSelected({'name': text});
+          typeSeance? type = typeSeance.values
+              .firstWhere((element) => element.stringValue == text);
+          widget.onSessionTypeSelected(type!);
         },
         child: Text(
           text.toUpperCase(),
@@ -54,10 +57,10 @@ class _LinkSessionTypeToSensorState extends State<LinkSessionTypeToSensor> {
           spacing: -2.0,
           runSpacing: -6.0,
           children: [
-            'Entrainement',
-            'Match',
-            'Physique',
-          ].map((String name) => buildButton(name)).toList(),
+            typeSeance.Entrainement.stringValue,
+            typeSeance.Match.stringValue,
+            typeSeance.Physique.stringValue,
+          ].map((type) => buildButton(type)).toList(),
         ),
       ),
     );

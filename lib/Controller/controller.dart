@@ -14,7 +14,7 @@ class Controller with ChangeNotifier {
 
   final ApplicationModel model;
 
-  Controller({required this.model}){
+  Controller({required this.model}) {
     initialize();
   }
 
@@ -25,7 +25,6 @@ class Controller with ChangeNotifier {
   void initialize() {
     platformData.setMethodCallHandler(_handleMethod);
   }
-
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
@@ -45,8 +44,41 @@ class Controller with ChangeNotifier {
     }
   }
 
+  Widget get homeWidget => const LogPage();
 
-  Widget get homeWidget => LogPage(model: model);
+  int findSmallestAvailableIndex(List<Sensor> sensors) {
+    // Créer une liste pour stocker les indices existants
+    List<int> existingIndices = [];
+
+    // Extraire les indices de tous les capteurs existants
+    for (Sensor sensor in sensors) {
+      String? name = sensor.name;
+      if (name != null && name.startsWith('Dot ')) {
+        try {
+          int index = int.parse(name.substring(4));
+          existingIndices.add(index);
+        } catch (e) {
+          print('Erreur lors de la conversion du nom du capteur en entier: $e');
+        }
+      }
+    }
+
+    // Trier la liste des indices existants
+    existingIndices.sort();
+
+    // Trouver le plus petit index disponible
+    int newIndex = 1;
+    for (int index in existingIndices) {
+      if (index == newIndex) {
+        newIndex++;
+      } else {
+        break; // Nous avons trouvé un trou dans la séquence
+      }
+    }
+
+    return newIndex; // Retourner le plus petit index disponible
+  }
+
 
   Future<void> getSensors() async {
     try {
@@ -58,17 +90,23 @@ class Controller with ChangeNotifier {
 
       for (var fetchedSensor in fetchedSensors) {
         var existingSensor = model.sensors
-            .firstWhereOrNull((s) => s?.uuid == fetchedSensor.uuid);
+            .firstWhereOrNull((s) => s.uuid == fetchedSensor.uuid);
         if (existingSensor != null) {
           // Update existing sensor data if necessary
         } else {
-          model.sensors.add(fetchedSensor); // Add new sensor
+          // Ajouter un nouveau capteur
+          model.sensors.add(fetchedSensor);
+
+          int index = findSmallestAvailableIndex(model.sensors);
+
+          fetchedSensor.name =
+              "Dot $index"; // Mettre à jour le nom avec le nouvel index
         }
       }
 
       model.sensors.removeWhere((s) =>
-          !fetchedSensors.any((fs) => fs.uuid == s?.uuid) &&
-          s?.isConnected == false);
+          !fetchedSensors.any((fs) => fs.uuid == s.uuid) &&
+          s.isConnected == false);
 
       notifyListeners(); // Notify changes
     } on PlatformException catch (e) {
@@ -82,45 +120,45 @@ class Controller with ChangeNotifier {
     try {
       // Disconnect any currently connected sensor
       var currentlyConnectedSensor =
-          model.sensors.firstWhereOrNull((s) => s!.isConnected);
+          model.sensors.firstWhereOrNull((s) => s.isConnected);
       if (currentlyConnectedSensor != null &&
           currentlyConnectedSensor.uuid != null &&
           currentlyConnectedSensor.isActif == false) {
-        await disconnectSensor(currentlyConnectedSensor.uuid!);
+        await disconnectSensor(currentlyConnectedSensor);
       }
 
       final Map<dynamic, dynamic> result =
           await platform.invokeMethod('connectSensor', sensorUuid);
 
       model.sensors
-          .where((element) => element?.uuid == sensorUuid)
+          .where((element) => element.uuid == sensorUuid)
           .first
-          ?.macAdress = result['macAddress'];
+          .macAdress = result['macAddress'];
 
       String batteryDescription =
           result['battery'] ?? "Battery:(Uncharged, 100%)";
       int batteryLevel = parseBatteryLevel(batteryDescription);
 
       model.sensors
-          .where((element) => element?.uuid == sensorUuid)
+          .where((element) => element.uuid == sensorUuid)
           .first
-          ?.battery = batteryLevel;
+          .battery = batteryLevel;
       model.sensors
-          .where((element) => element?.uuid == sensorUuid)
+          .where((element) => element.uuid == sensorUuid)
           .first
-          ?.batteryIsCharging = batteryDescription.contains("Charging");
+          .batteryIsCharging = batteryDescription.contains("Charging");
       model.sensors
-          .where((element) => element?.uuid == sensorUuid)
+          .where((element) => element.uuid == sensorUuid)
           .first
-          ?.totalSpace = result['totalSpace'];
+          .totalSpace = result['totalSpace'];
       model.sensors
-          .where((element) => element?.uuid == sensorUuid)
+          .where((element) => element.uuid == sensorUuid)
           .first
-          ?.usedSpace = result['usedSpace'];
+          .usedSpace = result['usedSpace'];
       model.sensors
-          .where((element) => element?.uuid == sensorUuid)
+          .where((element) => element.uuid == sensorUuid)
           .first
-          ?.isConnected = true;
+          .isConnected = true;
 
       notifyListeners();
     } on PlatformException catch (e) {
@@ -143,32 +181,27 @@ class Controller with ChangeNotifier {
     }
   }
 
-  Future<void> disconnectSensor(String sensorUuid) async {
+  Future<void> disconnectSensor(Sensor sensor) async {
     try {
       final bool result =
-          await platform.invokeMethod('disconnectSensor', sensorUuid);
+          await platform.invokeMethod('disconnectSensor', sensor.uuid);
       if (result) {
-        model.sensors
-            .where((element) => element?.uuid == sensorUuid)
-            .first
-            ?.isConnected = false;
-        model.sensors
-            .where((element) => element?.uuid == sensorUuid)
-            .first
-            ?.isActif = false;
-        model.sensors
-            .where((element) => element?.uuid == sensorUuid)
-            .first
-            ?.player = null;
-        model.sensors
-            .where((element) => element?.uuid == sensorUuid)
-            .first
-            ?.seanceType = null;
-        model.users
-            .where((element) => element.isActif == true)
-            .first
-            .isActif = false;
-        model.removeSensorWithUuid(sensorUuid);
+        sensor.isConnected = false;
+        sensor.isActif = false;
+        if(sensor.player != null) {
+          model.users
+              .where((element) => element.nom == sensor.player?.nom)
+              .first
+              .isActif = false;
+        }
+        sensor.player = null;
+        sensor.seanceType = null;
+        sensor.macAdress = null;
+        sensor.battery = null;
+        sensor.batteryIsCharging = false;
+        sensor.totalSpace = null;
+        sensor.usedSpace = null;
+        model.removeSensorWithUuid(sensor.uuid!);
         notifyListeners();
       }
     } on PlatformException catch (e) {
@@ -176,64 +209,20 @@ class Controller with ChangeNotifier {
     }
   }
 
-  Future<void> setSelectedPlayer(String player) async {
-    var connectedSensor = model.sensors.firstWhereOrNull((s) => s!.isConnected);
-    if (connectedSensor != null &&
-        model.sensors.firstWhereOrNull((s) => s!.isConnected)?.isActif ==
-            false) {
-      model.sensors.firstWhereOrNull((s) => s!.isConnected)?.player =
-          model.users.firstWhereOrNull((u) => u.nom == player);
-      notifyListeners();
-    }
-  }
-
-  Future<void> deselectPlayer() async {
-    var connectedSensor = model.sensors.firstWhereOrNull((s) => s!.isConnected);
-    if (connectedSensor != null &&
-        model.sensors.firstWhereOrNull((s) => s!.isConnected)?.isActif ==
-            false) {
-      model.users.firstWhereOrNull((u) => u.isActif)?.isActif = false;
-      model.sensors.firstWhereOrNull((s) => s!.isConnected)?.player = null;
-      notifyListeners();
-    }
-  }
-
-  Future<void> setSeanceType(typeSeance type) async {
-    var connectedSensor = model.sensors.firstWhereOrNull((s) => s!.isConnected);
-    if (connectedSensor != null &&
-        model.sensors.firstWhereOrNull((s) => s!.isConnected)?.isActif ==
-            false) {
-      model.sensors.firstWhereOrNull((s) => s!.isConnected)?.seanceType = type;
-      notifyListeners();
-    }
-  }
-
-  Future<void> deselectSeanceType() async {
-    var connectedSensor = model.sensors.firstWhereOrNull((s) => s!.isConnected);
-    if (connectedSensor != null &&
-        model.sensors.firstWhereOrNull((s) => s!.isConnected)?.isActif ==
-            false) {
-      model.sensors.firstWhereOrNull((s) => s!.isConnected)?.seanceType = null;
-      notifyListeners();
-    }
-  }
-
-  Future<void> addActiveSensor() async {
-    var connectedSensor = model.sensors.firstWhereOrNull((s) => s!.isConnected);
-    if (connectedSensor?.seanceType != null &&
-        connectedSensor?.player != null &&
-        connectedSensor?.isActif == false) {
-      model.sensors
-          .where((element) => element?.uuid == connectedSensor?.uuid)
-          .first
-          ?.isActif = true;
+  Future<void> addActiveSensor(
+      String uuid, String player, typeSeance seanceType) async {
+    var sensor = model.sensors.firstWhereOrNull((s) => s.uuid == uuid);
+    if (sensor != null) {
+      sensor.player = model.users.firstWhereOrNull((u) => u.nom == player);
+      sensor.seanceType = seanceType;
+      sensor.isActif = true;
       notifyListeners();
     }
   }
 
   Future<void> startTraining() async {
     try {
-      var activeSensor = model.sensors.firstWhereOrNull((s) => s!.isActif);
+      var activeSensor = model.sensors.firstWhereOrNull((s) => s.isActif);
       if (activeSensor != null) {
         await platform.invokeMethod('startRecording', activeSensor.uuid);
       }
@@ -244,16 +233,16 @@ class Controller with ChangeNotifier {
 
   Future<void> stopTraining() async {
     try {
-      var activeSensor = model.sensors.firstWhereOrNull((s) => s!.isActif);
+      var activeSensor = model.sensors.firstWhereOrNull((s) => s.isActif);
       if (activeSensor != null) {
         isExporting = true;
         notifyListeners();
 
-        await platform.invokeMethod('stopRecordingAndExportData', activeSensor.uuid);
+        await platform.invokeMethod(
+            'stopRecordingAndExportData', activeSensor.uuid);
       }
     } on PlatformException catch (e) {
       print("Failed to stop recording: '${e.message}'");
     }
-
   }
 }

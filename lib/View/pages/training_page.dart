@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:trackbad/View/pages/add_sensor_page.dart';
+import '../../Controller/controller.dart';
 import 'ongoing_session_page.dart';
 
 class TrainingPage extends StatefulWidget {
@@ -10,22 +12,12 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPageState extends State<TrainingPage> {
-  List<Map<String, dynamic>> sensors = [];
-
-  void _addSensor(Map<String, dynamic> newSensor) {
-    setState(() {
-      sensors.add(newSensor);
-    });
-  }
-
-  void _removeSensor(Map<String, dynamic> sensor) {
-    setState(() {
-      sensors.remove(sensor);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+    final sensors = controller.model.sensors.where((s) => s?.isActif == true).toList();
+
     return Column(
       children: [
         const Padding(padding: EdgeInsets.only(top: 80)),
@@ -56,15 +48,11 @@ class _TrainingPageState extends State<TrainingPage> {
           IconButton(
             icon: const Icon(Icons.add_circle,
                 color: Color.fromRGBO(240, 54, 18, 1), size: 45),
-            onPressed: () async {
-              final result = await Navigator.push<Map<String, dynamic>>(
+            onPressed: () {
+              Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => AddSensorPage(onAdd: _addSensor)),
+                MaterialPageRoute(builder: (context) => const AddSensorPage()),
               );
-              if (result != null) {
-                _addSensor(result);
-              }
             },
           )
         ]),
@@ -77,7 +65,6 @@ class _TrainingPageState extends State<TrainingPage> {
               spacing: 5.0, // Espace horizontal entre les cartes
               runSpacing: 30.0, // Espace vertical entre les lignes
               children: sensors.map((sensor) {
-                // Remplacez 'sensors' par votre liste de données
                 return SizedBox(
                   width: 100,
                   child: GestureDetector(
@@ -87,16 +74,16 @@ class _TrainingPageState extends State<TrainingPage> {
                         builder: (BuildContext context) {
                           // Pop-up d'informations sur le capteur
                           return AlertDialog(
-                            title: Text(sensor['name']),
+                            title: Text(sensor?.name ?? "Inconnu"),
                             content: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text('Nom: ${sensor['name']}'),
+                                Text('Joueur : ${sensor?.player?.nom}'),
                                 const SizedBox(height: 8.0),
-                                Text('Capteur: ${sensor['sensor']}'),
+                                Text('Capteur : ${sensor?.uuid}'),
                                 const SizedBox(height: 8.0),
-                                Text("Type de séance: ${sensor['type']}"),
+                                Text("Type de séance : ${sensor?.seanceType.toString()}"),
                                 // Ajoutez plus d'informations ici
                               ],
                             ),
@@ -105,8 +92,7 @@ class _TrainingPageState extends State<TrainingPage> {
                                 child: const Text('Déconnecter',
                                     style: TextStyle(color: Colors.red)),
                                 onPressed: () {
-                                  _removeSensor(sensor);
-                                  Navigator.of(context).pop();
+                                  controller.disconnectSensor(sensor!);
                                 },
                               ),
                               TextButton(
@@ -140,7 +126,7 @@ class _TrainingPageState extends State<TrainingPage> {
                             children: [
                               const Padding(padding: EdgeInsets.only(top: 25)),
                               Text(
-                                sensor['name'],
+                                sensor?.player?.nom ?? "Inconnu",
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   color: Colors.white,
@@ -150,7 +136,7 @@ class _TrainingPageState extends State<TrainingPage> {
                               ),
                               const Padding(padding: EdgeInsets.only(top: 3)),
                               Text(
-                                '${sensor['sensor']}',
+                                '${sensor?.name}',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   color: Colors.white,

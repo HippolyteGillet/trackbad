@@ -1,45 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trackbad/Model/Sensor.dart';
 import 'package:trackbad/View/pages/link_player_to_sensor.dart';
 import 'package:trackbad/View/pages/search_sensor.dart';
+import '../../Controller/controller.dart';
 import 'link_session_type_to_sensor.dart';
 
 class AddSensorPage extends StatefulWidget {
-  final Function(Map<String, dynamic>) onAdd;
 
-  const AddSensorPage({Key? key, required this.onAdd}) : super(key: key);
+  const AddSensorPage({Key? key}) : super(key: key);
 
   @override
   State<AddSensorPage> createState() => _AddSensorPageState();
 }
 
 class _AddSensorPageState extends State<AddSensorPage> {
-  Map<String, dynamic>? selectedSensor;
-  Map<String, dynamic>? selectedPlayer;
-  Map<String, dynamic>? selectedSessionType;
 
-  void _handleAddSensor() {
-    Map<String, dynamic> newSensorData = {
-      'name': selectedPlayer!['name'],
-      'sensor': selectedSensor!['name'],
-      'type': selectedSessionType!['name'],
-    };
-    Navigator.of(context).pop(newSensorData);
+  late String selectedSensor;
+  late String selectedPlayer;
+  late typeSeance selectedSessionType;
+
+  void _handleAddSensor(Controller controller) {
+    controller.addActiveSensor(selectedSensor, selectedPlayer, selectedSessionType);
   }
 
-  void _handleSensorSelected(Map<String, dynamic> sensor) {
+  void _handleSensorSelected(String sensor) {
     selectedSensor = sensor;
   }
 
-  void _handlePlayerSelected(Map<String, dynamic> sensor) {
+  void _handlePlayerSelected(String sensor) {
     selectedPlayer = sensor;
   }
 
-  void _handleSessionTypeSelected(Map<String, dynamic> sensor) {
-    selectedSessionType = sensor;
+  void _handleSessionTypeSelected(typeSeance typeSeance) {
+    selectedSessionType = typeSeance;
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -100,7 +100,8 @@ class _AddSensorPageState extends State<AddSensorPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              _handleAddSensor();
+              _handleAddSensor(controller);
+              Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
