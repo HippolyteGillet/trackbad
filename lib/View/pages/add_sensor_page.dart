@@ -21,6 +21,7 @@ class _AddSensorPageState extends State<AddSensorPage> {
     Map<String, dynamic> newSensorData = {
       'name': selectedPlayer!['name'],
       'sensor': selectedSensor!['name'],
+      'battery': selectedSensor!['batteryLevel'],
       'type': selectedSessionType!['name'],
     };
     Navigator.of(context).pop(newSensorData);
@@ -100,7 +101,28 @@ class _AddSensorPageState extends State<AddSensorPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              _handleAddSensor();
+              if(selectedSensor == null || selectedPlayer == null || selectedSessionType == null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      title: const Text('Erreur'),
+                      content: const Text('Vous n\'avez pas sélectionné tous les éléments nécessaires pour ajouter un capteur.'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }else{
+                _handleAddSensor();
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
