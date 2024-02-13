@@ -17,7 +17,7 @@ class _TrainingPageState extends State<TrainingPage> {
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
     List<Map<String, dynamic>> sensors = controller.model.sensors.where((s) => s?.isActif == true).map((s) => {
-      'name': s?.player?.nom ?? '',
+      'name': s?.player?.lastname ?? '',
       'sensor': s?.macAdress ?? '',
       'uuid': s?.uuid ?? '',
     }).toList();

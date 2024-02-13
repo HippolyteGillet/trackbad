@@ -18,10 +18,11 @@ class User {
   dynamic get firstname => _firstname;
   set firstname(dynamic value) => _firstname = value;
 
-  User(this._id, this._nom);
+  dynamic get email => _email;
+  set email(dynamic value) => _email= value;
 
-  int get id => _id;
-  set id(int value) => _id = value;
+  dynamic get password => _password;
+  set password(dynamic value) => _password = value;
 
   bool get log => isLog;
   set SetisLog(bool value) => isLog = value;

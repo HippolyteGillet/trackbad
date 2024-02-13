@@ -35,7 +35,7 @@ class Controller with ChangeNotifier {
         //print("Données reçues de iOS: $dataMap");
         // Traitez ou utilisez les données reçues ici
 
-        // Mettre isExporting à false une fois que les données sont reçues
+
         isExporting = false;
         notifyListeners(); // Notifier les observateurs du changement
 
@@ -182,7 +182,7 @@ class Controller with ChangeNotifier {
         model.sensors.firstWhereOrNull((s) => s!.isConnected)?.isActif ==
             false) {
       model.sensors.firstWhereOrNull((s) => s!.isConnected)?.player =
-          model.users.firstWhereOrNull((u) => u.nom == player);
+          model.users.firstWhereOrNull((u) => u.lastname == player);
       notifyListeners();
     }
   }
