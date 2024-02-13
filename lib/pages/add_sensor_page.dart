@@ -15,11 +15,13 @@ class AddSensorPage extends StatefulWidget {
 class _AddSensorPageState extends State<AddSensorPage> {
   Map<String, dynamic>? selectedSensor;
   Map<String, dynamic>? selectedPlayer;
+  Map<String, dynamic>? selectedSessionType;
 
   void _handleAddSensor() {
     Map<String, dynamic> newSensorData = {
       'name': selectedPlayer!['name'],
       'sensor': selectedSensor!['name'],
+      'type': selectedSessionType!['name'],
     };
     Navigator.of(context).pop(newSensorData);
   }
@@ -30,6 +32,10 @@ class _AddSensorPageState extends State<AddSensorPage> {
 
   void _handlePlayerSelected(Map<String, dynamic> sensor) {
     selectedPlayer = sensor;
+  }
+
+  void _handleSessionTypeSelected(Map<String, dynamic> sensor) {
+    selectedSessionType = sensor;
   }
 
   @override
@@ -89,7 +95,9 @@ class _AddSensorPageState extends State<AddSensorPage> {
               ),
             ),
           ),
-          const LinkSessionTypeToSensor(),
+          LinkSessionTypeToSensor(
+            onSessionTypeSelected: _handleSessionTypeSelected,
+          ),
           ElevatedButton(
             onPressed: () {
               _handleAddSensor();
