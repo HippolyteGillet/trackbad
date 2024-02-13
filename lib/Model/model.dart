@@ -8,14 +8,18 @@ class ApplicationModel with ChangeNotifier{
   List<Sensor?> sensors = [];
   List<User> users = [];
 
-  void ajouterUtilisateur(String nom, int id) {
+  void ajouterUtilisateur(dynamic id, dynamic lastname, dynamic firstname, dynamic email, dynamic password) {
     // Ajouter un utilisateur à la liste avec un ID auto-généré
-    users.add(User(id, nom));
+    users.add(User(id, lastname, firstname, email, password));
   }
 
-  List<User> get utilisateurs => users;
-
-  List<Sensor?> get capteurs => sensors;
+  void displayUsers(){
+    int index = 0;
+    for (User user in users){
+      print('Player: ${index++}');
+      user.display();
+    }
+  }
 
   void rebuildSensorList(List<Sensor> nouveauxCapteurs) {
     sensors = nouveauxCapteurs;

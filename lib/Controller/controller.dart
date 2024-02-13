@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
 import '../View/pages/log_page.dart';
 import '../Model/Sensor.dart';
+import '../Model/User.dart';
 import 'dart:async';
 
 
@@ -112,8 +113,8 @@ class Controller with ChangeNotifier {
   Future<void> setSelectedPlayer(String player) async {
     var connectedSensor = model.sensors.firstWhereOrNull((s) => s!.isConnected);
     if (connectedSensor != null && model.sensors.firstWhereOrNull((s) => s!.isConnected)?.isActif == false) {
-      model.users.firstWhereOrNull((u) => u.nom == player)?.isActif = true;
-      model.sensors.firstWhereOrNull((s) => s!.isConnected)?.player = model.users.firstWhereOrNull((u) => u.nom == player);
+      model.users.firstWhereOrNull((u) => u.lastname == player)?.isActif = true;
+      model.sensors.firstWhereOrNull((s) => s!.isConnected)?.player = model.users.firstWhereOrNull((u) => u.lastname == player);
       notifyListeners();
     }
   }
@@ -150,5 +151,27 @@ class Controller with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  //---------------------Login---------------------//
+  Future<void> login(String email, String password) async {
+    for (int i = 0; i < model.users.length; i++) {
+      if (model.users[i].lastname == email && model.users[i].firstname == password){
+        model.users[i].isLog = true;
+        print('Connection');
+        break;
+      }
+    }
+    for (int i = 0; i < model.users.length; i++) {
+      if (model.users[i].isLog == true){
+        print('CONNECTE');
+        break;
+      }
+    }
+  }
+
+  Future<void> Logout() async {
+    model.users.where((element) => element.isLog == true).first.isLog = false;
+  }
+
 
 }

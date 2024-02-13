@@ -17,7 +17,7 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
   Widget buildButton(String text, Controller controller) {
     bool isSelected = _selectedButton == text;
     bool isSensorAvailable = controller.model.sensors.where((s) => s?.isConnected == true && s?.isActif == false).isNotEmpty;
-    User? user = controller.model.users.firstWhereOrNull((u) => u.nom == text);
+    User? user = controller.model.users.firstWhereOrNull((u) => u.lastname == text);
     bool isUserActive = user?.isActif ?? false;
 
     return Padding(
@@ -55,14 +55,14 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
-    final names = controller.model.users.map((user) => user.nom).toList();
+    final names = controller.model.users.map((user) => user.lastname).toList();
     return Container(
       color: Colors.yellow,
       width: 360,
       height: 100,
       child: ListView(
         scrollDirection: Axis.vertical,
-        children: names.map((String name) => buildButton(name, controller)).toList(),
+        children: names.map((dynamic name) => buildButton(name, controller)).toList(),
       ),
     );
   }

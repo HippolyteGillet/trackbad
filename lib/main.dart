@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trackbad/Controller/controller.dart';
 import 'package:trackbad/DAO/Connection.dart';
-import 'package:trackbad/DAO/Users.dart';
+import 'package:trackbad/DAO/UsersDAO.dart';
 import 'package:trackbad/Model/model.dart';
 import 'package:trackbad/Model/User.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as Supabase;
@@ -14,11 +14,10 @@ void main() {
   myConnection.initializeSupabase();
   final supabase = Supabase.Supabase.instance.client;
 
-  Users users = Users(supabase);
-
   final model = ApplicationModel();
-  model.ajouterUtilisateur("Elie BIME", 1);
-  model.ajouterUtilisateur("Pag ZERRRR", 2);
+
+  Users usersDao = Users(supabase, model);
+
 
   runApp(
     ChangeNotifierProvider(
