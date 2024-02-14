@@ -5,7 +5,7 @@ import 'RawData.dart';
 
 
 class ApplicationModel with ChangeNotifier{
-  List<Sensor?> sensors = [];
+  List<Sensor> sensors = [];
   List<User> users = [];
   List<RawData> rawdata = [];
 
@@ -43,7 +43,7 @@ class ApplicationModel with ChangeNotifier{
   }
 
   void removeSensorWithUuid(String uuid) {
-    sensors.removeWhere((s) => s?.uuid == uuid);
+    sensors.removeWhere((s) => s.uuid == uuid);
   }
 
 

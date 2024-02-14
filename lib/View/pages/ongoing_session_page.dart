@@ -35,33 +35,31 @@ class _OngoingSessionPageState extends State<OngoingSessionPage> {
           const Padding(padding: EdgeInsets.only(top: 150)),
           Center(
               child: ElevatedButton(
-            onPressed: () async {
-              await controller.stopTraining();
+                onPressed: ()  {
+                  controller.stopTraining();
 
-              if (!mounted) return;
-
-              Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const LoadingFile()));
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
-              minimumSize: const Size(250, 60),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-            ),
-            child: const Text(
-              'Fin de session',
-              style: TextStyle(
-                fontFamily: 'LeagueSpartan',
-                fontWeight: FontWeight.bold,
-                fontSize: 35,
-                color: Colors.white,
-              ),
-            ),
-          ))
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const LoadingFile()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
+                  minimumSize: const Size(250, 60),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+                child: const Text(
+                  'Fin de session',
+                  style: TextStyle(
+                    fontFamily: 'LeagueSpartan',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
+                    color: Colors.white,
+                  ),
+                ),
+              ))
         ],
       ),
     );

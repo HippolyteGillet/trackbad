@@ -1,6 +1,6 @@
 import '../Model/User.dart';
 
-enum typeSeance { Entrainement, Match }
+enum typeSeance { Entrainement, Match, Physique }
 
 extension TypeSeanceExtension on typeSeance {
   String get stringValue {
@@ -8,7 +8,8 @@ extension TypeSeanceExtension on typeSeance {
       case typeSeance.Entrainement:
         return 'Entrainement';
       case typeSeance.Match:
-        return 'Match';
+        return 'Match';case typeSeance.Physique:
+        return 'Physique';
       default:
         return ''; // Gérer d'autres cas si nécessaire
     }
@@ -17,6 +18,7 @@ extension TypeSeanceExtension on typeSeance {
 
 class Sensor {
   String? uuid;
+  String? name;
   String? macAdress;
   int? battery;
   bool? batteryIsCharging;
@@ -30,7 +32,7 @@ class Sensor {
 
   typeSeance? seanceType;
 
-  Sensor(this.uuid, this.macAdress, this.battery, this.batteryIsCharging, this.totalSpace, this.usedSpace);
+  Sensor(this.uuid, this.name, this.macAdress, this.battery, this.batteryIsCharging, this.totalSpace, this.usedSpace);
 
   Sensor.withUuid(String this.uuid);
 
