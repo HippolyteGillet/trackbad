@@ -20,7 +20,7 @@ class _TrainingPageState extends State<TrainingPage> {
 
     return Column(
       children: [
-        const Padding(padding: EdgeInsets.only(top: 80)),
+        const Padding(padding: EdgeInsets.only(top: 20)),
         const Center(
           child: Text(
             'Nouvelle Séance',
@@ -33,7 +33,7 @@ class _TrainingPageState extends State<TrainingPage> {
             ),
           ),
         ),
-        const Padding(padding: EdgeInsets.only(top: 50)),
+        const Padding(padding: EdgeInsets.only(top: 30)),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           const Text(
             'Ajouter un capteur',
