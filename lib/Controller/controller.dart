@@ -223,6 +223,10 @@ class Controller with ChangeNotifier {
       String uuid, String player, typeSeance seanceType) async {
     var sensor = model.sensors.firstWhereOrNull((s) => s.uuid == uuid);
     if (sensor != null) {
+      model.users
+          .where((element) => element.id == player)
+          .first
+          .isActif = true;
       sensor.player = model.users.firstWhereOrNull((u) => u.id == player);
       sensor.seanceType = seanceType;
       sensor.isActif = true;

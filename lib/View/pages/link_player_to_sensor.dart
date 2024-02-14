@@ -59,7 +59,7 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
           alignment: WrapAlignment.center,
           spacing: -2.0,
           runSpacing: -6.0,
-          children: controller.model.users.map((User user) => buildButton(user)).toList(),
+          children: controller.model.users.where((element) => element.isActif == false).map((User user) => buildButton(user)).toList(),
         ),
       ),
     );
