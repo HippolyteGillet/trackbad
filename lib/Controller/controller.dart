@@ -200,7 +200,7 @@ class Controller with ChangeNotifier {
         sensor.isActif = false;
         if (sensor.player != null) {
           model.users
-              .where((element) => element.nom == sensor.player?.nom)
+              .where((element) => element.id == sensor.player?.id)
               .first
               .isActif = false;
         }
@@ -223,7 +223,7 @@ class Controller with ChangeNotifier {
       String uuid, String player, typeSeance seanceType) async {
     var sensor = model.sensors.firstWhereOrNull((s) => s.uuid == uuid);
     if (sensor != null) {
-      sensor.player = model.users.firstWhereOrNull((u) => u.nom == player);
+      sensor.player = model.users.firstWhereOrNull((u) => u.id == player);
       sensor.seanceType = seanceType;
       sensor.isActif = true;
       notifyListeners();

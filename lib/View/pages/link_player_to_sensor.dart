@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../Controller/controller.dart';
+import '../../Model/User.dart';
 
 class LinkPlayerToSensor extends StatefulWidget {
   final void Function(String sensor) onPlayerSelected;
@@ -12,7 +16,8 @@ class LinkPlayerToSensor extends StatefulWidget {
 class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
   String _selectedButton = '';
 
-  Widget buildButton(String text) {
+  Widget buildButton(User user) {
+    String text = user.firstname + ' ' + user.lastname;
     bool isSelected = _selectedButton == text;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
@@ -31,7 +36,7 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
           setState(() {
             _selectedButton = text;
           });
-          widget.onPlayerSelected(text);
+          widget.onPlayerSelected(user.id);
         },
         child: Text(
           text.toUpperCase(),
@@ -44,7 +49,6 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
     // Filtrer les utilisateurs inactifs avant de construire les boutons
-    final inactiveUserNames = controller.model.users.where((user) => !user.isActif).map((user) => user.lastname).toList();
 
     return SizedBox(
       width: double.infinity,
@@ -55,9 +59,10 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
           alignment: WrapAlignment.center,
           spacing: -2.0,
           runSpacing: -6.0,
-          children: inactiveUserNames.map((dynamic name) => buildButton(name, controller)).toList(),
+          children: controller.model.users.map((User user) => buildButton(user)).toList(),
         ),
       ),
     );
   }
+
 }
