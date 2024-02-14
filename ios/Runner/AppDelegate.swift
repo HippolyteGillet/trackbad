@@ -38,6 +38,8 @@ import MovellaDotSdk
                 self?.handleStartRecording(call: call, result: result)
             case "stopRecordingAndExportData":
                 self?.handleStopRecordingAndExportData(call: call, result: result)
+            case "eraseSensorData":
+                self?.handleEraseData(call: call, result: result)
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -213,9 +215,9 @@ import MovellaDotSdk
             if allFilesDone {
                     print("Tous les fichiers ont été exportés.")
                     self?.stopDataExportSequence(for: device)
-                    DispatchQueue.main.async {
-                        self?.sendDataToFlutter(data: "{\"exportCompleted\": true}")
-                    }
+                DispatchQueue.main.async {
+                    self?.sendDataToFlutter(data: "{\"exportCompleted\": \"\(device.uuid)\"}")
+                }
                 } else {
                     print("Fichier à l'index \(index) exporté.")
                     DispatchQueue.main.async {
@@ -273,28 +275,34 @@ import MovellaDotSdk
         case failedToStartExport
     }
 
-    /*func saveExportedDataToFirestore(plotData: DotPlotData) {
-            // Obtenez une référence à la base de données Firestore
-            let db = Firestore.firestore()
+    private func handleEraseData(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let args = call.arguments as? String,
+              let deviceToErase = connectedDeviceList.first(where: { $0.uuid == args }) else {
+            print("Device not found")
+            result(FlutterError(code: "DEVICE_NOT_FOUND", message: "Device not found", details: nil))
+            return
+        }
 
-            // Créez un dictionnaire avec les données que vous souhaitez enregistrer
-            let dataToSave: [String: Any] = [
-                "timestamp": plotData.timeStamp,
-                "accelerationX": plotData.acc0,
-                "accelerationY": plotData.acc1,
-                "accelerationZ": plotData.acc2,
-            ]
-
-            // Ajoutez les données à une collection (par exemple, "sensorData")
-            db.collection("sensors").addDocument(data: dataToSave) { error in
-                if let error = error {
-                    print("Erreur lors de l'enregistrement des données : \(error)")
-                } else {
-                    print("Données enregistrées avec succès")
+        // Configurer le bloc de callback pour l'opération d'effacement
+        deviceToErase.setEraseDataDoneBlock { success in
+            if success == 1 { // Supposons que 'success' soit un int où 1 représente le succès
+                print("Data erased successfully for sensor: \(deviceToErase.uuid)")
+                DispatchQueue.main.async {
+                    result(true)
+                }
+            } else {
+                print("Failed to erase data for sensor: \(deviceToErase.uuid)")
+                DispatchQueue.main.async {
+                    result(false)
                 }
             }
         }
-        */
+
+        // Lancer l'effacement des données
+        deviceToErase.eraseData()
+    }
+
+
 
 }
 

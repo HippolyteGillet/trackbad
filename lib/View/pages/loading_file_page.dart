@@ -13,13 +13,17 @@ class LoadingFile extends StatefulWidget {
 
 class _LoadingFileState extends State<LoadingFile> {
   bool hasNavigated = false; // Ajout d'un flag pour contrôler la navigation
+  bool hasExported = false;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Controller>(
       builder: (context, controller, child) {
         // Vérifier si l'état est false et que la navigation n'a pas encore eu lieu
-        if (!controller.isExporting && !hasNavigated) {
+        if(controller.isExporting == false && hasExported == false) {
+          hasExported = true;
+        }
+        if (hasExported && !controller.isErasing && !hasNavigated) {
           // Marquer comme ayant navigué pour éviter de multiples navigations
           hasNavigated = true;
 
@@ -58,6 +62,8 @@ class _LoadingFileState extends State<LoadingFile> {
         const Padding(padding: EdgeInsets.only(top: 50)),
         if (controller.isExporting)
           Text("Exportation en cours: ${controller.currentProgress} sur ${controller.totalPackets}")
+        else if(controller.isErasing)
+          const Text("Suppression des données en cours...")
         else
           const Text("Préparation de l'exportation..."),
       ],

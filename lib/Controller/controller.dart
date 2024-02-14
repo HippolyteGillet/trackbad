@@ -11,6 +11,7 @@ import 'dart:async';
 class Controller with ChangeNotifier {
   bool isConnecting = false;
   bool isExporting = false;
+  bool isErasing = false;
 
   int currentProgress = 0;
   int totalPackets = 0;
@@ -44,8 +45,11 @@ class Controller with ChangeNotifier {
         print('Progression: $currentProgress sur $totalPackets');
         notifyListeners();
       } else if (data.containsKey('exportCompleted')) {
+        currentProgress = totalPackets;
         print('fin de lexport');
         isExporting = false;
+        isErasing = true;
+        eraseSensorData(data['exportCompleted']);
         notifyListeners(); // Notifier les observateurs du changement
       }
     }
@@ -231,6 +235,7 @@ class Controller with ChangeNotifier {
       var activeSensor = model.sensors.firstWhereOrNull((s) => s.isActif);
       if (activeSensor != null) {
         await platform.invokeMethod('startRecording', activeSensor.uuid);
+        print("Started recording for sensor: ${activeSensor.uuid}");
       }
     } on PlatformException catch (e) {
       print("Failed to start recording: '${e.message}'");
@@ -249,6 +254,26 @@ class Controller with ChangeNotifier {
       }
     } on PlatformException catch (e) {
       print("Failed to stop recording: '${e.message}'");
+    }
+  }
+
+  Future<void> eraseSensorData(String sensorUuid) async {
+    try {
+      final bool result =
+          await platform.invokeMethod('eraseSensorData', sensorUuid);
+      if (result) {
+        print("Data erased successfully for sensor: $sensorUuid");
+        isErasing = false;
+        notifyListeners();
+      } else {
+        print("Failed to erase data for sensor: $sensorUuid");
+        isErasing = false;
+        notifyListeners();
+      }
+    } on PlatformException catch (e) {
+      print("Failed to erase sensor data: '${e.message}'");
+      isErasing = false;
+      notifyListeners();
     }
   }
 }

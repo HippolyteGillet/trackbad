@@ -95,6 +95,8 @@ class _TrainingPageState extends State<TrainingPage> {
                                     style: TextStyle(color: Colors.red)),
                                 onPressed: () {
                                   controller.disconnectSensor(sensor!);
+                                  Navigator.of(context)
+                                      .pop(); // Ferme la boîte de dialogue
                                 },
                               ),
                               TextButton(
@@ -175,7 +177,10 @@ class _TrainingPageState extends State<TrainingPage> {
         ),
         const Padding(padding: EdgeInsets.only(top: 15)),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            await controller.startTraining();
+
+            if (!mounted) return;
             Navigator.push(
                 context,
                 PageRouteBuilder(
