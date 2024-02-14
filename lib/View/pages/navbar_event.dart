@@ -116,7 +116,7 @@ class _NavbarEventsState extends State<NavbarEvents> {
               ),
               label: '',
             ),
-            NavigationDestination(
+              NavigationDestination(
               selectedIcon: Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Image.asset('assets/images/stats.png',

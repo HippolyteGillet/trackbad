@@ -200,7 +200,7 @@ class Controller with ChangeNotifier {
         sensor.isActif = false;
         if (sensor.player != null) {
           model.users
-              .where((element) => element.nom == sensor.player?.nom)
+              .where((element) => element.id == sensor.player?.id)
               .first
               .isActif = false;
         }
@@ -223,7 +223,11 @@ class Controller with ChangeNotifier {
       String uuid, String player, typeSeance seanceType) async {
     var sensor = model.sensors.firstWhereOrNull((s) => s.uuid == uuid);
     if (sensor != null) {
-      sensor.player = model.users.firstWhereOrNull((u) => u.nom == player);
+      model.users
+          .where((element) => element.id == player)
+          .first
+          .isActif = true;
+      sensor.player = model.users.firstWhereOrNull((u) => u.id == player);
       sensor.seanceType = seanceType;
       sensor.isActif = true;
       notifyListeners();
@@ -276,4 +280,26 @@ class Controller with ChangeNotifier {
       notifyListeners();
     }
   }
+  //---------------------Login---------------------//
+  Future<void> login(String email, String password) async {
+    for (int i = 0; i < model.users.length; i++) {
+      if (model.users[i].lastname == email && model.users[i].firstname == password){
+        model.users[i].isLog = true;
+        print('Connection');
+        break;
+      }
+    }
+    for (int i = 0; i < model.users.length; i++) {
+      if (model.users[i].isLog == true){
+        print('CONNECTE');
+        break;
+      }
+    }
+  }
+
+  Future<void> Logout() async {
+    model.users.where((element) => element.isLog == true).first.isLog = false;
+  }
+
+
 }

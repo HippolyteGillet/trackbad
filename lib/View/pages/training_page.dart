@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:trackbad/View/pages/add_sensor_page.dart';
-import '../../Controller/controller.dart';
 import 'ongoing_session_page.dart';
+import 'package:provider/provider.dart';
+import '../../Controller/controller.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({super.key});
@@ -80,7 +80,7 @@ class _TrainingPageState extends State<TrainingPage> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text('Joueur : ${sensor?.player?.nom}'),
+                                Text('Joueur : ${sensor?.player?.lastname} ${sensor?.player?.firstname}'),
                                 const SizedBox(height: 8.0),
                                 Text("Batterie: ${sensor?.battery}%"),
                                 Text('Capteur : ${sensor?.uuid}'),
@@ -132,7 +132,7 @@ class _TrainingPageState extends State<TrainingPage> {
                               const Padding(padding: EdgeInsets.only(top: 25)),
                               FittedBox(
                                 child: Text(
-                                  sensor.player!.nom.split(" ")[0], // Prénom
+                                  sensor.player!.firstname, // Prénom
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -142,7 +142,7 @@ class _TrainingPageState extends State<TrainingPage> {
                               ),
                               FittedBox(
                                 child:Text(
-                                  sensor.player!.nom.split(" ").sublist(1).join(" "), // Nom de famille
+                                  sensor.player!.lastname, // Nom de famille
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,
