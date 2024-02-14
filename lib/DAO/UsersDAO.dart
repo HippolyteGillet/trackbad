@@ -23,6 +23,7 @@ class Users {
         users.add(user);
       }
 
+
       for (int i = 0; i < users.length; i++) {
         model.ajouterUtilisateur(users[i].id, users[i].lastname, users[i].firstname, users[i].email, users[i].password);
       }

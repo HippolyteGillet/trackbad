@@ -22,8 +22,12 @@ class ApplicationModel with ChangeNotifier{
     }
   }
 
-  void addData(dynamic id,  double x, double y, double z, int timestamp) {
+  void addData(dynamic id,  List<dynamic> x, List<dynamic> y, List<dynamic> z, List<dynamic> timestamp) {
+    print('Ajout de données');
     rawdata.add(RawData(id, x, y, z, timestamp));
+    print('fin de l\'ajout de données');
+
+    displayData();
   }
 
   void displayData(){

@@ -35,7 +35,6 @@ class Controller with ChangeNotifier {
         //print("Données reçues de iOS: $dataMap");
         // Traitez ou utilisez les données reçues ici
 
-
         isExporting = false;
         notifyListeners(); // Notifier les observateurs du changement
 

@@ -32,7 +32,7 @@ class RawData {
     }
   }
 
-  Future<void> newdata(SupabaseClient supabase, double x, double y, double z, int timestamp) async {
+  Future<void> newdata(SupabaseClient supabase, List<dynamic> x, List<dynamic> y, List<dynamic> z, List<dynamic> timestamp) async {
     try {
       final response = await supabase.from('data').insert({
         'acc_X': x,
@@ -62,16 +62,16 @@ class RawData {
 }
 
 class Data {
-  double acc_X;
-  double acc_Y;
-  double acc_Z;
-  int timestamp;
+  List<dynamic> acc_X;
+  List<dynamic> acc_Y;
+  List<dynamic> acc_Z;
+  List<dynamic> timestamp;
   String id;
 
-  double get GetX => acc_X;
-  double get GetY => acc_Y;
-  double get GetZ => acc_Z;
-  int get GetTime => timestamp;
+  List<dynamic> get GetX => acc_X;
+  List<dynamic> get GetY => acc_Y;
+  List<dynamic> get GetZ => acc_Z;
+  List<dynamic> get GetTime => timestamp;
   String get GetID => id;
 
   Data({
@@ -90,33 +90,4 @@ class Data {
     print('  ID: ${id}');
   }
 
-/*Future<void> setUserData(SupabaseClient supabase, ApplicationModel model) async {
-    try {
-      final response = await supabase.from('players').select('*').execute();
-
-      // Utilisez 'status' au lieu de 'error'
-      if (response.status == 200) {
-
-        // Assurez-vous que la réponse n'est pas vide
-        if (response.data != null) {
-
-          // Accédez aux colonnes spécifiques (lastname, firstname, id)
-          this.lastname = response.data.map((e) => e['lastname']).toList();
-          this.firstname = response.data.map((e) => e['firstname']).toList();
-          this.email = response.data.map((e) => e['email']).toList();
-          this.password = response.data.map((e) => e['password']).toList();
-          this.id = response.data.map((e) => e['id']).toList();
-
-          // Vous pouvez également imprimer ou utiliser ces données comme nécessaire
-          for (int i = 0; i < this.id.length; i++) {
-            model.ajouterUtilisateur(this.id[i], this.lastname[i], this.firstname[i], this.email[i], this.password[i]);
-          }
-        }
-      } else {
-        print("Erreur lors de la requête");
-      }
-    } catch (e) {
-      print('Erreur lors de la récupération des données : $e');
-    }
-  }*/
 }
