@@ -31,6 +31,7 @@ class User {
     print('  Lastname: ${lastname}');
     print('  Firstname: ${firstname}');
     print('  Email: ${email}');
+    print('  isLog: ${isLog}');
     print('  ID: ${id}');
   }
 

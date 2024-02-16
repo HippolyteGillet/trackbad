@@ -81,7 +81,6 @@ class Controller with ChangeNotifier {
 
         dataDao.newdata(supabase, accelerationXList, accelerationYList, accelerationZList, timeStampList);
 
-        print('2');
         accelerationXList.clear();
         accelerationYList.clear();
         accelerationZList.clear();
@@ -320,24 +319,39 @@ class Controller with ChangeNotifier {
     }
   }
   //---------------------Login---------------------//
-  Future<void> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
+    bool result = false;
+    print('email: $email');
+    print('password: $password');
     for (int i = 0; i < model.users.length; i++) {
-      if (model.users[i].lastname == email && model.users[i].firstname == password){
+      if (model.users[i].email == email && model.users[i].password == password){
         model.users[i].isLog = true;
-        print('Connection');
-        break;
+        result = true;
       }
     }
     for (int i = 0; i < model.users.length; i++) {
       if (model.users[i].isLog == true){
-        print('CONNECTE');
         break;
       }
     }
+
+    return result;
   }
 
-  Future<void> Logout() async {
+  Future<void> logout() async {
     model.users.where((element) => element.isLog == true).first.isLog = false;
+
+    model.displayUsers();
+  }
+
+  Future<bool> islogged() async {
+    bool result = false;
+    for (int i = 0; i < model.users.length; i++) {
+      if (model.users[i].isLog == true){
+        result = true;
+      }
+    }
+    return result;
   }
 
 

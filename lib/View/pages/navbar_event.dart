@@ -3,6 +3,8 @@ import 'package:trackbad/View/pages/log_page.dart';
 import 'package:trackbad/View/pages/profil_page.dart';
 import 'package:trackbad/View/pages/stats_page.dart';
 import 'package:trackbad/View/pages/training_page.dart';
+import 'package:trackbad/Controller/controller.dart';
+import 'package:provider/provider.dart';
 
 class NavbarEvents extends StatefulWidget {
   const NavbarEvents({super.key});
@@ -22,6 +24,8 @@ class _NavbarEventsState extends State<NavbarEvents> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 40,
@@ -31,7 +35,9 @@ class _NavbarEventsState extends State<NavbarEvents> {
           child: IconButton(
             icon: Image.asset('assets/images/setting-black.png',
                 width: 30, height: 30),
-            onPressed: () {
+            onPressed: () async {
+            bool result = await controller.islogged();
+            if (result) {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -41,6 +47,9 @@ class _NavbarEventsState extends State<NavbarEvents> {
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
+                          controller.model.displayUsers();
+                          controller.logout();
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -59,6 +68,13 @@ class _NavbarEventsState extends State<NavbarEvents> {
                   );
                 },
               );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const LogPage()),
+              );
+            }
             },
           ),
         ),
@@ -82,10 +98,18 @@ class _NavbarEventsState extends State<NavbarEvents> {
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
-          onDestinationSelected: (int index) {
-            setState(() {
-              _currentIndex = index;
-            });
+          onDestinationSelected: (int index) async {
+            // Vérifie si l'utilisateur essaie d'accéder à la page de profil et n'est pas connecté
+            if (index == 0 && !(await controller.islogged())) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LogPage()),
+              );
+            } else {
+              setState(() {
+                _currentIndex = index;
+              });
+            }
           },
           overlayColor: MaterialStateProperty.all(Colors.transparent),
           backgroundColor: Colors.black,
