@@ -41,7 +41,7 @@ class RawData {
         'timestamp': timestamp,
       }).execute();
 
-      if (response.status == 200) {
+      if (response.status >= 200 && response.status < 300) {
         print('Données ajoutées avec succès');
       } else {
         print('Erreur lors de l\'ajout des données');

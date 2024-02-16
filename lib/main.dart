@@ -22,7 +22,7 @@ Future<void> main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => Controller(model: model),
+      create: (context) => Controller(model: model, usersDao: usersDao, dataDao: dataDao, sessionDao: sessionDao, supabase: supabase),
       child: MyApp(),
     ),
   );
