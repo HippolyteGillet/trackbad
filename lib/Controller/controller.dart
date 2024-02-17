@@ -79,7 +79,10 @@ class Controller with ChangeNotifier {
         eraseSensorData(data['exportCompleted']);
         notifyListeners(); // Notifier les observateurs du changement
 
-        dataDao.newdata(supabase, accelerationXList, accelerationYList, accelerationZList, timeStampList);
+        String id = model.sensors.where((element) => element.isActif == true).first.player?.id;
+        String? type = model.sensors.where((element) => element.isActif == true).first.seanceType?.stringValue;
+
+        dataDao.newdata(supabase, accelerationXList, accelerationYList, accelerationZList, timeStampList, id, type!);
 
         accelerationXList.clear();
         accelerationYList.clear();

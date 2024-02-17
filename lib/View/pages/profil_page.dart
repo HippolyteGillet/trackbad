@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../Controller/controller.dart';
 
 class ProfilPage extends StatefulWidget {
   const ProfilPage({super.key});
@@ -8,8 +10,15 @@ class ProfilPage extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<ProfilPage> {
+
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+    final loggedUsers = controller.model.users.where((element) => element.isLog == true);
+    final firstName = loggedUsers.isNotEmpty ? loggedUsers.first.firstname.toString() : '';
+    final lastName = loggedUsers.isNotEmpty ? loggedUsers.first.lastname.toString() : '';
+    final role = loggedUsers.isNotEmpty ? loggedUsers.first.role.toString() : '';
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -18,11 +27,11 @@ class _ProfilPageState extends State<ProfilPage> {
             radius: 60,
             backgroundImage: AssetImage('assets/images/profil.png'),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 10),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
             child: Text(
-              'Nom Prénom',
-              style: TextStyle(
+              '$lastName $firstName',
+              style: const TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.w900,
                 fontSize: 30,
@@ -31,9 +40,9 @@ class _ProfilPageState extends State<ProfilPage> {
           ),
           Transform.translate(
             offset: const Offset(0, -10),
-            child: const Text(
-              'Entraineur',
-              style: TextStyle(
+            child: Text(
+              '$role',
+              style: const TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.w900,
                 color: Color.fromRGBO(0, 0, 0, 0.5),
@@ -255,8 +264,12 @@ class _ProfilPageState extends State<ProfilPage> {
                   width: 370,
                   height: 245,
                   child: ListView.builder(
-                      itemCount: 5,
+                      itemCount: controller.model.rawdata.length,
                       itemBuilder: (context, index) {
+                        var item = controller.model.rawdata[index];
+                        controller.dataDao.checkUpdate(controller.supabase, controller.model);
+                        String type = item.type;
+
                         return Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(35),
@@ -291,9 +304,9 @@ class _ProfilPageState extends State<ProfilPage> {
                                   )
                                 ],
                               ),
-                              title: const Text(
-                                'Entrainement',
-                                style: TextStyle(
+                              title: Text(
+                                '$type',
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'LeagueSpartan',
                                   fontWeight: FontWeight.w700,

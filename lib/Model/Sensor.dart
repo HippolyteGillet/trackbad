@@ -8,7 +8,8 @@ extension TypeSeanceExtension on typeSeance {
       case typeSeance.Entrainement:
         return 'Entrainement';
       case typeSeance.Match:
-        return 'Match';case typeSeance.Physique:
+        return 'Match';
+      case typeSeance.Physique:
         return 'Physique';
       default:
         return ''; // Gérer d'autres cas si nécessaire
@@ -32,7 +33,7 @@ class Sensor {
 
   typeSeance? seanceType;
 
-  Sensor(this.uuid, this.name, this.macAdress, this.battery, this.batteryIsCharging, this.totalSpace, this.usedSpace);
+  Sensor(this.uuid, this.name, this.macAdress, this.battery, this.batteryIsCharging, this.totalSpace, this.usedSpace, this.player);
 
   Sensor.withUuid(String this.uuid);
 

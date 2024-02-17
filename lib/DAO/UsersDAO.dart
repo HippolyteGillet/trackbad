@@ -19,13 +19,14 @@ class Users {
           firstname: row['firstname'],
           email: row['email'],
           password: row['password'],
+          role: row['role'],
         );
         users.add(user);
       }
 
 
       for (int i = 0; i < users.length; i++) {
-        model.ajouterUtilisateur(users[i].id, users[i].lastname, users[i].firstname, users[i].email, users[i].password);
+        model.ajouterUtilisateur(users[i].id, users[i].lastname, users[i].firstname, users[i].email, users[i].password, users[i].role);
       }
 
     } catch (e) {
@@ -48,11 +49,13 @@ class User {
   String email;
   String password;
   String id;
+  String role;
 
   String get GetLastname => lastname;
   String get GetFirstname => firstname;
   String get GetEmail => email;
   String get GetPassword => password;
+  String get GetRole => role;
   String get GetID => id;
 
   User({
@@ -61,12 +64,14 @@ class User {
     required this.firstname,
     required this.email,
     required this.password,
+    required this.role,
   });
 
   void display(){
     print('  Lastname: ${lastname}');
     print('  Firstname: ${firstname}');
     print('  Email: ${email}');
+    print('  Role: ${role}');
     print('  ID: ${id}');
   }
 
