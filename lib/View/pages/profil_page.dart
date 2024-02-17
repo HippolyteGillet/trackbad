@@ -17,6 +17,7 @@ class _ProfilPageState extends State<ProfilPage> {
     final loggedUsers = controller.model.users.where((element) => element.isLog == true);
     final firstName = loggedUsers.isNotEmpty ? loggedUsers.first.firstname.toString() : '';
     final lastName = loggedUsers.isNotEmpty ? loggedUsers.first.lastname.toString() : '';
+    final id = loggedUsers.isNotEmpty ? loggedUsers.first.id.toString() : '';
     final role = loggedUsers.isNotEmpty ? loggedUsers.first.role.toString() : '';
 
     return Center(
@@ -264,7 +265,7 @@ class _ProfilPageState extends State<ProfilPage> {
                   width: 370,
                   height: 245,
                   child: ListView.builder(
-                      itemCount: controller.model.rawdata.length,
+                      itemCount: controller.model.rawdata.where((element) => element.player_id == id).length,
                       itemBuilder: (context, index) {
                         var item = controller.model.rawdata[index];
                         controller.dataDao.checkUpdate(controller.supabase, controller.model);
