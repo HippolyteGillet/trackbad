@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:trackbad/DAO/Connection.dart';
+import 'package:trackbad/DAO/DataDAO.dart';
+import 'package:trackbad/DAO/UsersDAO.dart';
+import 'package:trackbad/DAO/SessionDAO.dart';
 import '../Model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,18 +11,32 @@ import 'package:collection/collection.dart';
 import '../View/pages/log_page.dart';
 import '../Model/Sensor.dart';
 import 'dart:async';
+import 'package:supabase_flutter/supabase_flutter.dart' as Supabase;
+
 
 class Controller with ChangeNotifier {
   bool isConnecting = false;
   bool isExporting = false;
   bool isErasing = false;
 
+  Users usersDao;
+  RawData dataDao;
+  Sessions sessionDao;
+  late final supabase;
+
+  int index = 0;
+
+  List<dynamic> timeStampList = [];
+  List<dynamic> accelerationXList = [];
+  List<dynamic> accelerationYList = [];
+  List<dynamic> accelerationZList = [];
+
   int currentProgress = 0;
   int totalPackets = 0;
 
   final ApplicationModel model;
 
-  Controller({required this.model}) {
+  Controller({required this.model, required this.usersDao, required this.dataDao, required this.sessionDao, required this.supabase}) {
     initialize();
   }
 
@@ -32,7 +50,16 @@ class Controller with ChangeNotifier {
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     if (call.method == 'receiveData') {
-      final data = json.decode(call.arguments);
+      var data = json.decode(call.arguments);
+      var data2 = data;
+
+      if(data2.containsKey('timeStamp')){
+        timeStampList.add(data2['timeStamp']);
+        accelerationXList.add(data2['accelerationX']);
+        accelerationYList.add(data2['accelerationY']);
+        accelerationZList.add(data2['accelerationZ']);
+      }
+
       if (data.containsKey('totalPackets')) {
         totalPackets = data['totalPackets'];
         currentProgress = 0; // Réinitialiser la progression
@@ -51,6 +78,20 @@ class Controller with ChangeNotifier {
         isErasing = true;
         eraseSensorData(data['exportCompleted']);
         notifyListeners(); // Notifier les observateurs du changement
+
+        String id = model.sensors.where((element) => element.isActif == true).first.player?.id;
+        String? type = model.sensors.where((element) => element.isActif == true).first.seanceType?.stringValue;
+
+        dataDao.newdata(supabase, accelerationXList, accelerationYList, accelerationZList, timeStampList, id, type!);
+
+        accelerationXList.clear();
+        accelerationYList.clear();
+        accelerationZList.clear();
+        timeStampList.clear();
+
+
+        print('Données exportées en bdd avec succès');
+
       }
     }
   }
@@ -281,24 +322,39 @@ class Controller with ChangeNotifier {
     }
   }
   //---------------------Login---------------------//
-  Future<void> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
+    bool result = false;
+    print('email: $email');
+    print('password: $password');
     for (int i = 0; i < model.users.length; i++) {
-      if (model.users[i].lastname == email && model.users[i].firstname == password){
+      if (model.users[i].email == email && model.users[i].password == password){
         model.users[i].isLog = true;
-        print('Connection');
-        break;
+        result = true;
       }
     }
     for (int i = 0; i < model.users.length; i++) {
       if (model.users[i].isLog == true){
-        print('CONNECTE');
         break;
       }
     }
+
+    return result;
   }
 
-  Future<void> Logout() async {
+  Future<void> logout() async {
     model.users.where((element) => element.isLog == true).first.isLog = false;
+
+    model.displayUsers();
+  }
+
+  Future<bool> islogged() async {
+    bool result = false;
+    for (int i = 0; i < model.users.length; i++) {
+      if (model.users[i].isLog == true){
+        result = true;
+      }
+    }
+    return result;
   }
 
 

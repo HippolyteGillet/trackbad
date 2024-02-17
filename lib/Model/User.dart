@@ -4,10 +4,11 @@ class User {
   dynamic _firstname;
   dynamic _email;
   dynamic _password;
+  dynamic role;
   bool isActif = false;
   var isLog = false;
 
-  User(this._id, this._lastname, this._firstname, this._email, this._password);
+  User(this._id, this._lastname, this._firstname, this._email, this._password, this.role);
 
   dynamic get id => _id;
   set id(dynamic value) => _id = value;
@@ -31,6 +32,7 @@ class User {
     print('  Lastname: ${lastname}');
     print('  Firstname: ${firstname}');
     print('  Email: ${email}');
+    print('  isLog: ${isLog}');
     print('  ID: ${id}');
   }
 

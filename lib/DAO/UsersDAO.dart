@@ -19,13 +19,14 @@ class Users {
           firstname: row['firstname'],
           email: row['email'],
           password: row['password'],
+          role: row['role'],
         );
         users.add(user);
       }
 
 
       for (int i = 0; i < users.length; i++) {
-        model.ajouterUtilisateur(users[i].id, users[i].lastname, users[i].firstname, users[i].email, users[i].password);
+        model.ajouterUtilisateur(users[i].id, users[i].lastname, users[i].firstname, users[i].email, users[i].password, users[i].role);
       }
 
     } catch (e) {
@@ -48,11 +49,13 @@ class User {
   String email;
   String password;
   String id;
+  String role;
 
   String get GetLastname => lastname;
   String get GetFirstname => firstname;
   String get GetEmail => email;
   String get GetPassword => password;
+  String get GetRole => role;
   String get GetID => id;
 
   User({
@@ -61,42 +64,16 @@ class User {
     required this.firstname,
     required this.email,
     required this.password,
+    required this.role,
   });
 
   void display(){
     print('  Lastname: ${lastname}');
     print('  Firstname: ${firstname}');
     print('  Email: ${email}');
+    print('  Role: ${role}');
     print('  ID: ${id}');
   }
 
-  /*Future<void> setUserData(SupabaseClient supabase, ApplicationModel model) async {
-    try {
-      final response = await supabase.from('players').select('*').execute();
 
-      // Utilisez 'status' au lieu de 'error'
-      if (response.status == 200) {
-
-        // Assurez-vous que la réponse n'est pas vide
-        if (response.data != null) {
-
-          // Accédez aux colonnes spécifiques (lastname, firstname, id)
-          this.lastname = response.data.map((e) => e['lastname']).toList();
-          this.firstname = response.data.map((e) => e['firstname']).toList();
-          this.email = response.data.map((e) => e['email']).toList();
-          this.password = response.data.map((e) => e['password']).toList();
-          this.id = response.data.map((e) => e['id']).toList();
-
-          // Vous pouvez également imprimer ou utiliser ces données comme nécessaire
-          for (int i = 0; i < this.id.length; i++) {
-            model.ajouterUtilisateur(this.id[i], this.lastname[i], this.firstname[i], this.email[i], this.password[i]);
-          }
-        }
-      } else {
-        print("Erreur lors de la requête");
-      }
-    } catch (e) {
-      print('Erreur lors de la récupération des données : $e');
-    }
-  }*/
 }

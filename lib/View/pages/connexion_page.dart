@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trackbad/Controller/controller.dart';
+import 'package:provider/provider.dart';
 
 import 'navbar_event.dart';
 
@@ -10,8 +12,13 @@ class ConnexionPage extends StatefulWidget {
 }
 
 class _ConnexionPageState extends State<ConnexionPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<Controller>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -36,6 +43,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
             Padding(
               padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
               child: TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[300],
@@ -55,6 +63,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
               child: TextFormField(
+                controller: passwordController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[300],
@@ -87,12 +96,35 @@ class _ConnexionPageState extends State<ConnexionPage> {
             const Padding(padding: EdgeInsets.only(top: 20)),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => const NavbarEvents()));
-                },
+                  onPressed: () async {
+                    bool result = await controller.login(emailController.text, passwordController.text);
+                    if (result) {
+                      Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => const NavbarEvents()
+                          )
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Erreur de connexion'),
+                            content: Text('Une erreur s\'est produite lors de la tentative de connexion. Veuillez réessayer.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
                   minimumSize: const Size(350, 50),
