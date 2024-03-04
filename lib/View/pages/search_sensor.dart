@@ -24,7 +24,7 @@ class _SearchSensorState extends State<SearchSensor> {
   }
 
   void _startScanTimer() {
-    _scanTimer = Timer.periodic(const Duration(seconds: 4), (Timer t) {
+    _scanTimer = Timer.periodic(const Duration(seconds: 6), (Timer t) {
       _refreshSensors();
     });
   }

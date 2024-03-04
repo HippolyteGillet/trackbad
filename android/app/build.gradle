@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.trackbad"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -45,7 +45,7 @@ android {
         applicationId "com.example.trackbad"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 26
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -64,4 +64,11 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation files('libs/MovellaDotSdkCore_ANDROID_v2023.6.0_STABLE_RELEASE.aar')
+    implementation files('libs/MovellaDotSdkMfm_ANDROID_v2023.6.0_STABLE_RELEASE.aar')
+    implementation files('libs/MovellaDotSdkOta_ANDROID_v2023.6.0_STABLE_RELEASE.aar')
+    implementation fileTree(dir: '../../libs', include: ['*.aar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+}
