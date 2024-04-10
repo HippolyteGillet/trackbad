@@ -15,16 +15,24 @@ class _LogPageState extends State<LogPage> {
     return Scaffold(
         backgroundColor: const Color.fromRGBO(33, 29, 29, 1),
         body: Column(children: [
-          const Padding(padding: EdgeInsets.only(top: 80)),
-          Image.asset('assets/images/logo_1.png', width: 300, height: 300),
-          const Text("Trackbad",
+          Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.15)),
+          Image.asset(
+            'assets/images/logo_1.png',
+            width: MediaQuery.of(context).size.width * 0.5,
+            height: MediaQuery.of(context).size.height * 0.25,
+          ),
+          Text("TrackBad",
               style: TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.bold,
-                fontSize: 45,
+                fontSize: MediaQuery.of(context).size.width * 0.1,
                 color: Colors.white,
               )),
-          const Padding(padding: EdgeInsets.only(top: 150)),
+          Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.2)),
           Center(
             child: ElevatedButton(
               onPressed: () {
@@ -35,23 +43,28 @@ class _LogPageState extends State<LogPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
-                minimumSize: const Size(200, 50),
+                minimumSize: Size(MediaQuery.of(context).size.width * 0.5,
+                    MediaQuery.of(context).size.height * 0.07),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+                  borderRadius: BorderRadius.circular(
+                    MediaQuery.of(context).size.width * 0.1,
+                  ),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Se connecter',
                 style: TextStyle(
                   fontFamily: 'LeagueSpartan',
                   fontWeight: FontWeight.bold,
-                  fontSize: 25,
+                  fontSize: MediaQuery.of(context).size.width * 0.055,
                   color: Colors.white,
                 ),
               ),
             ),
           ),
-          const Padding(padding: EdgeInsets.all(10)),
+          Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.03)),
           ElevatedButton(
             onPressed: () {
               Navigator.push(
@@ -61,17 +74,20 @@ class _LogPageState extends State<LogPage> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
-              minimumSize: const Size(200, 50),
+              minimumSize: Size(MediaQuery.of(context).size.width * 0.65,
+                  MediaQuery.of(context).size.height * 0.07),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
+                borderRadius: BorderRadius.circular(
+                  MediaQuery.of(context).size.width * 0.1,
+                ),
               ),
             ),
-            child: const Text(
+            child: Text(
               'Démarrer une session',
               style: TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.bold,
-                fontSize: 25,
+                fontSize: MediaQuery.of(context).size.width * 0.055,
                 color: Colors.white,
               ),
             ),

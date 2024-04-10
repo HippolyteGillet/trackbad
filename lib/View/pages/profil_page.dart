@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import '../../Controller/controller.dart';
 
@@ -24,73 +26,73 @@ class _ProfilPageState extends State<ProfilPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const CircleAvatar(
-            radius: 60,
-            backgroundImage: AssetImage('assets/images/profil.png'),
+          CircleAvatar(
+            radius: MediaQuery.of(context).size.width * 0.12,
+            backgroundImage: const AssetImage('assets/images/profil.png'),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Text(
               '$lastName $firstName',
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.w900,
-                fontSize: 30,
+                fontSize: MediaQuery.of(context).size.width * 0.06,
               ),
             ),
           ),
           Transform.translate(
-            offset: const Offset(0, -10),
+            offset: Offset(0, -MediaQuery.of(context).size.width * 0.02),
             child: Text(
               '$role',
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.w900,
-                color: Color.fromRGBO(0, 0, 0, 0.5),
-                fontSize: 17,
+                color: const Color.fromRGBO(0, 0, 0, 0.5),
+                fontSize: MediaQuery.of(context).size.width * 0.04,
               ),
             ),
           ),
-          const Padding(padding: EdgeInsets.only(top: 30)),
+          Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.05)),
           Container(
               margin: const EdgeInsets.only(top: 10),
-              width: 350,
-              height: 90,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.width * 0.25,
               child: Stack(
                 clipBehavior: Clip.none,
                 children: <Widget>[
                   //Background Yellow
                   Positioned(
-                      top: -36,
-                      left: 15,
+                      top: -MediaQuery.of(context).size.width * 0.07,
+                      left: MediaQuery.of(context).size.width * 0.07,
                       child: Container(
-                        width: 95,
-                        height: 95,
+                        width: MediaQuery.of(context).size.width * 0.24,
+                        height: MediaQuery.of(context).size.width * 0.24,
                         decoration: BoxDecoration(
                           color: const Color(0xFFF7D101),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.12),
                         ),
                       )),
                   Positioned(
-                      top: -36,
-                      left: 127.5,
+                      top: -MediaQuery.of(context).size.width * 0.07,
+                      left: MediaQuery.of(context).size.width * 0.33,
                       child: Container(
-                        width: 95,
-                        height: 95,
+                        width: MediaQuery.of(context).size.width * 0.24,
+                        height: MediaQuery.of(context).size.width * 0.24,
                         decoration: BoxDecoration(
                           color: const Color(0xFFF7D101),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.12),
                         ),
                       )),
                   Positioned(
-                      top: -36,
-                      right: 15,
+                      top: -MediaQuery.of(context).size.width * 0.07,
+                      right: MediaQuery.of(context).size.width * 0.07,
                       child: Container(
-                        width: 95,
-                        height: 95,
+                        width: MediaQuery.of(context).size.width * 0.24,
+                        height: MediaQuery.of(context).size.width * 0.24,
                         decoration: BoxDecoration(
                           color: const Color(0xFFF7D101),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.12),
                         ),
                       )),
 
@@ -99,11 +101,11 @@ class _ProfilPageState extends State<ProfilPage> {
                     top: 0,
                     left: 0,
                     child: Container(
-                      width: 350,
-                      height: 90,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: MediaQuery.of(context).size.width * 0.25,
                       decoration: BoxDecoration(
                         color: const Color(0xFFF03612),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.08),
                         boxShadow: const [
                           BoxShadow(
                             color: Color.fromRGBO(0, 0, 0, 0.35),
@@ -117,14 +119,14 @@ class _ProfilPageState extends State<ProfilPage> {
 
                   //Circles
                   Positioned(
-                      top: -30,
-                      left: 20,
+                      top: -MediaQuery.of(context).size.width * 0.06,
+                      left: MediaQuery.of(context).size.width * 0.08,
                       child: Container(
-                        width: 85,
-                        height: 85,
+                        width: MediaQuery.of(context).size.width * 0.22,
+                        height: MediaQuery.of(context).size.width * 0.22,
                         decoration: BoxDecoration(
                           color: const Color(0xFFF03612),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.12),
                           boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(0, 0, 0, 0.35),
@@ -135,14 +137,14 @@ class _ProfilPageState extends State<ProfilPage> {
                         ),
                       )),
                   Positioned(
-                      top: -30,
-                      left: 132.5,
+                      top: -MediaQuery.of(context).size.width * 0.06,
+                      left: MediaQuery.of(context).size.width * 0.34,
                       child: Container(
-                        width: 85,
-                        height: 85,
+                        width: MediaQuery.of(context).size.width * 0.22,
+                        height: MediaQuery.of(context).size.width * 0.22,
                         decoration: BoxDecoration(
                           color: const Color(0xFFF03612),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.12),
                           boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(0, 0, 0, 0.35),
@@ -153,14 +155,14 @@ class _ProfilPageState extends State<ProfilPage> {
                         ),
                       )),
                   Positioned(
-                      top: -30,
-                      right: 20,
+                      top: -MediaQuery.of(context).size.width * 0.06,
+                      right: MediaQuery.of(context).size.width * 0.08,
                       child: Container(
-                        width: 85,
-                        height: 85,
+                        width: MediaQuery.of(context).size.width * 0.22,
+                        height:  MediaQuery.of(context).size.width * 0.22,
                         decoration: BoxDecoration(
                           color: const Color(0xFFF03612),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.12),
                           boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(0, 0, 0, 0.35),
@@ -172,98 +174,98 @@ class _ProfilPageState extends State<ProfilPage> {
                       )),
 
                   //Text
-                  const Positioned(
-                      top: -5,
-                      left: 33,
+                  Positioned(
+                      top: MediaQuery.of(context).size.width * 0.01,
+                      left: MediaQuery.of(context).size.width * 0.11,
                       child: Text(
                         '15,3K',
                         style: TextStyle(
                           fontFamily: 'LeagueSpartan',
                           fontWeight: FontWeight.w700,
-                          fontSize: 25,
+                          fontSize: MediaQuery.of(context).size.width * 0.07,
                           color: Colors.white,
                         ),
                       )),
-                  const Positioned(
-                      top: 62,
-                      left: 20,
+                  Positioned(
+                      top: MediaQuery.of(context).size.width * 0.17,
+                      left: MediaQuery.of(context).size.width * 0.08,
                       child: Text(
                         'Charge Max',
                         style: TextStyle(
                           fontFamily: 'LeagueSpartan',
                           fontWeight: FontWeight.w700,
-                          fontSize: 15,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
                           color: Colors.white,
                         ),
                       )),
-                  const Positioned(
-                      top: -15,
-                      left: 155,
+                  Positioned(
+                      top: -MediaQuery.of(context).size.width * 0.03,
+                      left: MediaQuery.of(context).size.width * 0.39,
                       child: Text(
                         '6,52\nG/S',
                         style: TextStyle(
                           fontFamily: 'LeagueSpartan',
                           fontWeight: FontWeight.w700,
-                          fontSize: 20,
+                          fontSize: MediaQuery.of(context).size.width * 0.06,
                           color: Colors.white,
                         ),
                       )),
-                  const Positioned(
-                      top: 62,
-                      left: 130,
+                  Positioned(
+                      top: MediaQuery.of(context).size.width * 0.17,
+                      left: MediaQuery.of(context).size.width * 0.33,
                       child: Text(
                         'Intensité Max',
                         style: TextStyle(
                           fontFamily: 'LeagueSpartan',
                           fontWeight: FontWeight.w700,
-                          fontSize: 15,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
                           color: Colors.white,
                         ),
                       )),
-                  const Positioned(
-                      top: -5,
-                      right: 35,
+                  Positioned(
+                      top: MediaQuery.of(context).size.width * 0.01,
+                      right: MediaQuery.of(context).size.width * 0.11,
                       child: Text(
                         '1127‘',
                         style: TextStyle(
                           fontFamily: 'LeagueSpartan',
                           fontWeight: FontWeight.w700,
-                          fontSize: 25,
+                          fontSize: MediaQuery.of(context).size.width * 0.07,
                           color: Colors.white,
                         ),
                       )),
-                  const Positioned(
-                      top: 62,
-                      right: 46,
+                  Positioned(
+                      top: MediaQuery.of(context).size.width * 0.17,
+                      right: MediaQuery.of(context).size.width * 0.15,
                       child: Text(
                         'Total',
                         style: TextStyle(
                           fontFamily: 'LeagueSpartan',
                           fontWeight: FontWeight.w700,
-                          fontSize: 15,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
                           color: Colors.white,
                         ),
                       )),
                 ],
               )),
-          const Padding(padding: EdgeInsets.only(top: 20)),
-          const Text(
+          Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03)),
+          Text(
             "Vos dernière séances",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: MediaQuery.of(context).size.width * 0.04,
               fontFamily: 'LeagueSpartan',
               fontWeight: FontWeight.w700,
-              color: Color.fromRGBO(0, 0, 0, 0.5),
+              color: const Color.fromRGBO(0, 0, 0, 0.5),
             ),
           ),
           SizedBox(
-            width: 380,
-            height: 266,
+            width: MediaQuery.of(context).size.width * 0.95,
+            height: MediaQuery.of(context).size.height * 0.27,
             child: Column(
               children: [
                 SizedBox(
-                  width: 370,
-                  height: 245,
+                  width: 370, // a changer
+                  height: 200, // a changer
                   child: ListView.builder(
                       itemCount: controller.model.rawdata.where((element) => element.player_id == id).length,
                       itemBuilder: (context, index) {

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:trackbad/Model/Sensor.dart';
 import 'package:trackbad/View/pages/link_player_to_sensor.dart';
@@ -7,7 +9,6 @@ import '../../Controller/controller.dart';
 import 'link_session_type_to_sensor.dart';
 
 class AddSensorPage extends StatefulWidget {
-
   const AddSensorPage({Key? key}) : super(key: key);
 
   @override
@@ -15,13 +16,13 @@ class AddSensorPage extends StatefulWidget {
 }
 
 class _AddSensorPageState extends State<AddSensorPage> {
-
   late String selectedSensor;
   late String selectedPlayer;
   late typeSeance selectedSessionType;
 
   void _handleAddSensor(Controller controller) {
-    controller.addActiveSensor(selectedSensor, selectedPlayer, selectedSessionType);
+    controller.addActiveSensor(
+        selectedSensor, selectedPlayer, selectedSessionType);
   }
 
   void _handleSensorSelected(String sensor) {
@@ -44,35 +45,40 @@ class _AddSensorPageState extends State<AddSensorPage> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const Padding(padding: EdgeInsets.only(top: 60)),
+          Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.08)),
           Align(
             alignment: Alignment.centerLeft,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios,
-                  color: Colors.black, size: 40),
+              icon: Icon(Icons.arrow_back_ios,
+                  color: Colors.black,
+                  size: MediaQuery.of(context).size.width * 0.08),
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          const Text("Connectez votre capteur",
+          Text("Connectez votre capteur",
               style: TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.w900,
-                fontSize: 30,
+                fontSize: MediaQuery.of(context).size.width * 0.07,
               )),
           SearchSensor(
             onSensorSelected: _handleSensorSelected,
           ),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.only(top: 10, left: 15),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.03,
+                  left: MediaQuery.of(context).size.width * 0.03),
               child: Text(
                 "Associer à :",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: MediaQuery.of(context).size.width * 0.04,
                   fontFamily: 'LeagueSpartan',
                   fontWeight: FontWeight.w700,
-                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                  color: const Color.fromRGBO(0, 0, 0, 0.5),
                 ),
               ),
             ),
@@ -80,17 +86,19 @@ class _AddSensorPageState extends State<AddSensorPage> {
           LinkPlayerToSensor(
             onPlayerSelected: _handlePlayerSelected,
           ),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.only(top: 10, left: 15),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.03,
+                  left: MediaQuery.of(context).size.width * 0.03),
               child: Text(
                 "Type de séance :",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: MediaQuery.of(context).size.width * 0.04,
                   fontFamily: 'LeagueSpartan',
                   fontWeight: FontWeight.w700,
-                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                  color: const Color.fromRGBO(0, 0, 0, 0.5),
                 ),
               ),
             ),
@@ -98,16 +106,24 @@ class _AddSensorPageState extends State<AddSensorPage> {
           LinkSessionTypeToSensor(
             onSessionTypeSelected: _handleSessionTypeSelected,
           ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.width * 0.05,
+            ),
+          ),
           ElevatedButton(
             onPressed: () {
-              if(selectedSensor == null || selectedPlayer == null || selectedSessionType == null) {
+              if (selectedSensor == null ||
+                  selectedPlayer == null ||
+                  selectedSessionType == null) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
                       alignment: Alignment.center,
                       title: const Text('Erreur'),
-                      content: const Text('Vous n\'avez pas sélectionné tous les éléments nécessaires pour ajouter un capteur.'),
+                      content: const Text(
+                          'Vous n\'avez pas sélectionné tous les éléments nécessaires pour ajouter un capteur.'),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
@@ -119,24 +135,26 @@ class _AddSensorPageState extends State<AddSensorPage> {
                     );
                   },
                 );
-              }else{
+              } else {
                 _handleAddSensor(controller);
                 Navigator.pop(context);
               }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
-              minimumSize: const Size(150, 50),
+              minimumSize: Size(MediaQuery.of(context).size.width * 0.5,
+                  MediaQuery.of(context).size.height * 0.07),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
+                borderRadius: BorderRadius.circular(
+                    MediaQuery.of(context).size.width * 0.05),
               ),
             ),
-            child: const Text(
+            child: Text(
               'Ajouter',
               style: TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.bold,
-                fontSize: 25,
+                fontSize: MediaQuery.of(context).size.width * 0.06,
                 color: Colors.white,
               ),
             ),

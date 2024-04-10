@@ -28,62 +28,67 @@ class _NavbarEventsState extends State<NavbarEvents> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 40,
+        toolbarHeight: MediaQuery.of(context).size.height * 0.08,
         automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.only(left: 5),
           child: IconButton(
-            icon: Image.asset('assets/images/setting-black.png',
-                width: 30, height: 30),
+            icon: Image.asset(
+              'assets/images/setting-black.png',
+              width: MediaQuery.of(context).size.width * 0.08,
+              height: MediaQuery.of(context).size.width * 0.08,
+            ),
             onPressed: () async {
-            bool result = await controller.islogged();
-            if (result) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Déconnexion'),
-                    content: const Text('Voulez-vous vous déconnecter ?'),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          controller.model.displayUsers();
-                          controller.logout();
+              bool result = await controller.islogged();
+              if (result) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Déconnexion'),
+                      content: const Text('Voulez-vous vous déconnecter ?'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            controller.model.displayUsers();
+                            controller.logout();
 
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LogPage()),
-                          );
-                        },
-                        child: const Text('Oui'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Non'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const LogPage()),
-              );
-            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LogPage()),
+                            );
+                          },
+                          child: const Text('Oui'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Non'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LogPage()),
+                );
+              }
             },
           ),
         ),
         backgroundColor: Colors.transparent,
         actions: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Image.asset('assets/images/logo-black.png',
-                width: 80, height: 40),
+            padding: const EdgeInsets.only(right: 20),
+            child: Image.asset(
+              'assets/images/logo-black.png',
+              width: MediaQuery.of(context).size.width * 0.2,
+              height: MediaQuery.of(context).size.width * 0.1,
+            ),
           ),
         ],
       ),
@@ -97,6 +102,7 @@ class _NavbarEventsState extends State<NavbarEvents> {
           indicatorColor: Colors.transparent,
         ),
         child: NavigationBar(
+          height: MediaQuery.of(context).size.height * 0.08,
           selectedIndex: _currentIndex,
           onDestinationSelected: (int index) async {
             // Vérifie si l'utilisateur essaie d'accéder à la page de profil et n'est pas connecté
@@ -116,40 +122,60 @@ class _NavbarEventsState extends State<NavbarEvents> {
           destinations: <NavigationDestination>[
             NavigationDestination(
               selectedIcon: Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Image.asset('assets/images/user.png',
-                    width: 50, height: 50),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02),
+                child: Image.asset(
+                  'assets/images/user.png',
+                  width: MediaQuery.of(context).size.height * 0.05,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                ),
               ),
               icon: Padding(
-                padding: const EdgeInsets.only(top: 23),
-                child: Image.asset('assets/images/user_outline.png',
-                    width: 40, height: 40),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02),
+                child: Image.asset(
+                  'assets/images/user_outline.png',
+                  width: MediaQuery.of(context).size.height * 0.04,
+                  height: MediaQuery.of(context).size.height * 0.04,
+                ),
               ),
               label: '',
             ),
             NavigationDestination(
               selectedIcon: Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Image.asset('assets/images/plus.png',
-                    width: 50, height: 50),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02),
+                child: Image.asset(
+                  'assets/images/plus.png',
+                  width: MediaQuery.of(context).size.height * 0.05,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                ),
               ),
               icon: Padding(
-                padding: const EdgeInsets.only(top: 23),
-                child: Image.asset('assets/images/plus_outline.png',
-                    width: 40, height: 40),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02),
+                child: Image.asset(
+                  'assets/images/plus_outline.png',
+                  width: MediaQuery.of(context).size.height * 0.04,
+                  height: MediaQuery.of(context).size.height * 0.04,
+                ),
               ),
               label: '',
             ),
-              NavigationDestination(
+            NavigationDestination(
               selectedIcon: Padding(
-                padding: const EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02),
                 child: Image.asset('assets/images/stats.png',
-                    width: 50, height: 50),
+                    width: MediaQuery.of(context).size.height * 0.05,
+                    height: MediaQuery.of(context).size.height * 0.05),
               ),
               icon: Padding(
-                padding: const EdgeInsets.only(top: 23),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02),
                 child: Image.asset('assets/images/stats_outline.png',
-                    width: 40, height: 40),
+                    width: MediaQuery.of(context).size.height * 0.04,
+                    height: MediaQuery.of(context).size.height * 0.04)
               ),
               label: '',
             ),
