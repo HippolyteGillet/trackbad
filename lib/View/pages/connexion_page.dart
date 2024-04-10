@@ -23,169 +23,235 @@ class _ConnexionPageState extends State<ConnexionPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Padding(padding: EdgeInsets.only(top: 60)),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.06),
+            ),
             Align(
               alignment: Alignment.centerLeft,
               child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios,
-                    color: Colors.black, size: 40),
+                icon: Icon(Icons.arrow_back_ios,
+                    color: Colors.black,
+                    size: MediaQuery.of(context).size.width * 0.08),
                 onPressed: () => Navigator.pop(context),
               ),
             ),
-            const Text(
+            Text(
               "Bon Retour !",
               style: TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.w900,
-                fontSize: 30,
+                fontSize: MediaQuery.of(context).size.width * 0.07,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-              child: TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  labelText: 'Email',
-                  labelStyle: const TextStyle(
-                    fontFamily: 'LeagueSpartan',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.03,
+                  right: MediaQuery.of(context).size.width * 0.05,
+                  left: MediaQuery.of(context).size.width * 0.05,
                 ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-            ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.09,
+                  alignment: Alignment.center,
+                  child: TextFormField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      contentPadding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.05,
+                        left: MediaQuery.of(context).size.width * 0.05,
+                      ),
+                      labelText: 'Email',
+                      labelStyle: TextStyle(
+                        fontFamily: 'LeagueSpartan',
+                        fontWeight: FontWeight.w900,
+                        fontSize: MediaQuery.of(context).size.width * 0.05,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          MediaQuery.of(context).size.width * 0.03,
+                        ),
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'LeagueSpartan',
+                      fontWeight: FontWeight.w600,
+                      fontSize:
+                          MediaQuery.of(context).size.width * 0.04,
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                )),
             Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-              child: TextFormField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  labelText: 'Password',
-                  labelStyle: const TextStyle(
-                    fontFamily: 'LeagueSpartan',
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20,
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.03,
+                right: MediaQuery.of(context).size.width * 0.05,
+                left: MediaQuery.of(context).size.width * 0.05,
+                bottom: MediaQuery.of(context).size.height * 0.01,
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.09,
+                alignment: Alignment.center,
+                child: TextFormField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    contentPadding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.05,
+                      left: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    labelText: 'Password',
+                    labelStyle: TextStyle(
+                      fontFamily: 'LeagueSpartan',
+                      fontWeight: FontWeight.w900,
+                      fontSize: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        MediaQuery.of(context).size.width * 0.03,
+                      ),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
+                  obscureText: true,
+                  style: TextStyle(
+                    fontFamily: 'LeagueSpartan',
+                    fontWeight: FontWeight.w600,
+                    fontSize: MediaQuery.of(context).size.width * 0.04,
                   ),
                 ),
-                obscureText: true,
               ),
             ),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {},
-                child: const Text('Mot de passe oublié ?',
+                child: Text('Mot de passe oublié ?',
                     style: TextStyle(
                       color: Colors.black,
                       fontFamily: 'LeagueSpartan',
                       fontWeight: FontWeight.w900,
-                      fontSize: 15,
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
                     )),
               ),
             ),
-            const Padding(padding: EdgeInsets.only(top: 20)),
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.04,
+              ),
+            ),
             Center(
               child: ElevatedButton(
-                  onPressed: () async {
-                    bool result = await controller.login(emailController.text, passwordController.text);
-                    if (result) {
-                      Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                              pageBuilder: (_, __, ___) => const NavbarEvents()
-                          )
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Erreur de connexion'),
-                            content: Text('Une erreur s\'est produite lors de la tentative de connexion. Veuillez réessayer.'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
+                onPressed: () async {
+                  bool result = await controller.login(
+                      emailController.text, passwordController.text);
+                  if (result) {
+                    Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => const NavbarEvents()));
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Erreur de connexion'),
+                          content: const Text(
+                              'Une erreur s\'est produite lors de la tentative de connexion. Veuillez réessayer.'),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('OK'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
-                  minimumSize: const Size(350, 50),
+                  minimumSize: Size(MediaQuery.of(context).size.width * 0.9,
+                      MediaQuery.of(context).size.height * 0.065),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(
+                        MediaQuery.of(context).size.width * 0.03),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Connexion',
                   style: TextStyle(
                     fontFamily: 'LeagueSpartan',
                     fontWeight: FontWeight.bold,
-                    fontSize: 25,
+                    fontSize: MediaQuery.of(context).size.width * 0.05,
                     color: Colors.white,
                   ),
                 ),
               ),
             ),
-            const Padding(padding: EdgeInsets.only(top: 10)),
-            const Divider(
-              color: Colors.grey,
-              height: 40,
-              thickness: 1,
-              indent: 20,
-              endIndent: 20,
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.03,
+              ),
             ),
-            const Padding(padding: EdgeInsets.only(top: 20)),
-            const Text("Ou se connecter avec",
+            Divider(
+              color: Colors.grey,
+              thickness: MediaQuery.of(context).size.width * 0.002,
+              indent: MediaQuery.of(context).size.width * 0.05,
+              endIndent: MediaQuery.of(context).size.width * 0.05,
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.03,
+              ),
+            ),
+            Text("Ou se connecter avec",
                 style: TextStyle(
                   color: Colors.grey,
                   fontFamily: 'LeagueSpartan',
                   fontWeight: FontWeight.w600,
-                  fontSize: 20,
+                  fontSize: MediaQuery.of(context).size.width * 0.04,
                 )),
-            const Padding(padding: EdgeInsets.only(top: 20)),
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.03,
+              ),
+            ),
             Container(
               color: Colors.grey,
-              width: 60,
-              height: 60,
+              width: MediaQuery.of(context).size.width * 0.15,
+              height: MediaQuery.of(context).size.width * 0.15,
             ),
-            const Padding(padding: EdgeInsets.only(top: 40)),
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.08,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text(
+                Text(
                   'Pas encore inscrit ?',
                   style: TextStyle(
                     fontFamily: 'LeagueSpartan',
                     fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                    fontSize: MediaQuery.of(context).size.width * 0.03,
                   ),
                 ),
                 TextButton(
                   onPressed: () {},
-                  child: const Text(
+                  child: Text(
                     'Créer un compte',
                     style: TextStyle(
                       color: Colors.black,
                       fontFamily: 'LeagueSpartan',
                       fontWeight: FontWeight.w900,
-                      fontSize: 15,
+                      fontSize: MediaQuery.of(context).size.width * 0.03,
                     ),
                   ),
                 ),

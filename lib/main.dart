@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Trackbad',
       home: Provider.of<Controller>(context).homeWidget, // Exemple d'accès
+      debugShowCheckedModeBanner: false,
     );
   }
 }

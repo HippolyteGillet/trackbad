@@ -19,20 +19,20 @@ class _OngoingSessionPageState extends State<OngoingSessionPage> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const Padding(padding: EdgeInsets.only(top: 80)),
-          const Text("Session en cours",
+          Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.08)),
+          Text("Session en cours",
               style: TextStyle(
                 fontFamily: 'LeagueSpartan',
                 fontWeight: FontWeight.bold,
-                fontSize: 45,
-                color: Color.fromRGBO(240, 54, 18, 1),
+                fontSize: MediaQuery.of(context).size.width * 0.08,
+                color: const Color.fromRGBO(240, 54, 18, 1),
               )),
-          const Padding(padding: EdgeInsets.only(top: 60)),
+          Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04)),
           Image.network(
               "https://media.giphy.com/media/3HApvvXC7f8aSdAqT3/giphy.gif",
-              width: 300,
-              height: 300),
-          const Padding(padding: EdgeInsets.only(top: 150)),
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.4),
+          Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.2)),
           Center(
               child: ElevatedButton(
                 onPressed: ()  {
@@ -45,17 +45,19 @@ class _OngoingSessionPageState extends State<OngoingSessionPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
-                  minimumSize: const Size(250, 60),
+                  minimumSize: Size(MediaQuery.of(context).size.width * 0.7,
+                      MediaQuery.of(context).size.height * 0.08),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
+                    borderRadius: BorderRadius.circular(
+                        MediaQuery.of(context).size.width * 0.05)
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Fin de session',
                   style: TextStyle(
                     fontFamily: 'LeagueSpartan',
                     fontWeight: FontWeight.bold,
-                    fontSize: 35,
+                    fontSize: MediaQuery.of(context).size.width * 0.06,
                     color: Colors.white,
                   ),
                 ),

@@ -12,58 +12,63 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPageState extends State<TrainingPage> {
-
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
-    final sensors = controller.model.sensors.where((s) => s?.isActif == true).toList();
+    final sensors =
+        controller.model.sensors.where((s) => s?.isActif == true).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Training Page'),
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Padding(padding: EdgeInsets.only(top: 20)),
-            const Center(
+            Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width * 0.08)),
+            Center(
               child: Text(
                 'Nouvelle Séance',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'LeagueSpartan',
                   fontWeight: FontWeight.w900,
-                  color: Color.fromRGBO(240, 54, 18, 1),
-                  fontSize: 40,
+                  color: const Color.fromRGBO(240, 54, 18, 1),
+                  fontSize: MediaQuery.of(context).size.width * 0.09,
                 ),
               ),
             ),
-            const Padding(padding: EdgeInsets.only(top: 30)),
+            Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width * 0.03)),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Text(
+              Text(
                 'Ajouter un capteur',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'LeagueSpartan',
                   fontWeight: FontWeight.bold,
-                  fontSize: 30,
+                  fontSize: MediaQuery.of(context).size.width * 0.06,
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(left: 10)),
+              Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.03)),
               IconButton(
-                icon: const Icon(Icons.add_circle,
-                    color: Color.fromRGBO(240, 54, 18, 1), size: 45),
+                icon: Icon(Icons.add_circle,
+                    color: const Color.fromRGBO(240, 54, 18, 1),
+                    size: MediaQuery.of(context).size.width * 0.07),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const AddSensorPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const AddSensorPage()),
                   );
                 },
               )
             ]),
             SizedBox(
-              width: 350,
-              height: 335,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.5,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.only(top: 25),
                 scrollDirection: Axis.horizontal,
@@ -72,8 +77,8 @@ class _TrainingPageState extends State<TrainingPage> {
                   runSpacing: 30.0,
                   children: sensors.map((sensor) {
                     return SizedBox(
-                      width: 110,
-                      height: 100,
+                      width: 110, // a modifier
+                      height: 100, // a modifier
                       child: GestureDetector(
                         onTap: () {
                           showDialog(
@@ -85,12 +90,14 @@ class _TrainingPageState extends State<TrainingPage> {
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text('Joueur : ${sensor?.player?.lastname} ${sensor?.player?.firstname}'),
+                                    Text(
+                                        'Joueur : ${sensor?.player?.lastname} ${sensor?.player?.firstname}'),
                                     const SizedBox(height: 8.0),
                                     Text("Batterie: ${sensor?.battery}%"),
                                     Text('Capteur : ${sensor?.uuid}'),
                                     const SizedBox(height: 8.0),
-                                    Text("Type de séance : ${sensor?.seanceType.toString()}"),
+                                    Text(
+                                        "Type de séance : ${sensor?.seanceType.toString()}"),
                                   ],
                                 ),
                                 actions: <Widget>[
@@ -131,7 +138,8 @@ class _TrainingPageState extends State<TrainingPage> {
                               Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Padding(padding: EdgeInsets.only(top: 25)),
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 25)),
                                   FittedBox(
                                     child: Text(
                                       sensor.player!.firstname,
@@ -143,7 +151,7 @@ class _TrainingPageState extends State<TrainingPage> {
                                     ),
                                   ),
                                   FittedBox(
-                                    child:Text(
+                                    child: Text(
                                       sensor.player!.lastname,
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
@@ -152,7 +160,8 @@ class _TrainingPageState extends State<TrainingPage> {
                                       ),
                                     ),
                                   ),
-                                  const Padding(padding: EdgeInsets.only(top: 3)),
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 3)),
                                   FittedBox(
                                     child: Text(
                                       '${sensor?.name}',
@@ -164,7 +173,8 @@ class _TrainingPageState extends State<TrainingPage> {
                                       ),
                                     ),
                                   ),
-                                  const Padding(padding: EdgeInsets.only(top: 10)),
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 10)),
                                 ],
                               )
                             ],
@@ -176,7 +186,9 @@ class _TrainingPageState extends State<TrainingPage> {
                 ),
               ),
             ),
-            const Padding(padding: EdgeInsets.only(top: 15)),
+            Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width * 0.04)),
             ElevatedButton(
               onPressed: () async {
                 await controller.startTraining();
@@ -185,21 +197,24 @@ class _TrainingPageState extends State<TrainingPage> {
                 Navigator.push(
                     context,
                     PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => const OngoingSessionPage()));
+                        pageBuilder: (_, __, ___) =>
+                            const OngoingSessionPage()));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromRGBO(240, 54, 18, 1),
-                minimumSize: const Size(250, 60),
+                minimumSize: Size(MediaQuery.of(context).size.width * 0.7,
+                    MediaQuery.of(context).size.height * 0.07),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0),
+                  borderRadius: BorderRadius.circular(
+                      MediaQuery.of(context).size.width * 0.05),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Commencer',
                 style: TextStyle(
                   fontFamily: 'LeagueSpartan',
                   fontWeight: FontWeight.bold,
-                  fontSize: 35,
+                  fontSize: MediaQuery.of(context).size.width * 0.06,
                   color: Colors.white,
                 ),
               ),

@@ -20,16 +20,20 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
     String text = user.firstname + ' ' + user.lastname;
     bool isSelected = _selectedButton == text;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.03, vertical: MediaQuery.of(context).size.width * 0.04),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
-          backgroundColor: isSelected ? const Color(0xFFF7D101) : const Color(0xFF222FE6),
-          textStyle: const TextStyle(
-            fontSize: 12,
+          backgroundColor:
+              isSelected ? const Color(0xFFF7D101) : const Color(0xFF222FE6),
+          textStyle: TextStyle(
+            fontSize: MediaQuery.of(context).size.width * 0.03,
             fontWeight: FontWeight.bold,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.03,
+              vertical: MediaQuery.of(context).size.width * 0.02),
           shape: const StadiumBorder(),
         ),
         onPressed: () {
@@ -49,20 +53,21 @@ class _LinkPlayerToSensorState extends State<LinkPlayerToSensor> {
   Widget build(BuildContext context) {
     final controller = Provider.of<Controller>(context);
     // Filtrer les utilisateurs inactifs avant de construire les boutons
-
     return SizedBox(
       width: double.infinity,
-      height: 120,
+      height: MediaQuery.of(context).size.height * 0.15,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Wrap(
           alignment: WrapAlignment.center,
-          spacing: -2.0,
-          runSpacing: -6.0,
-          children: controller.model.users.where((element) => element.isActif == false).map((User user) => buildButton(user)).toList(),
+          spacing: -MediaQuery.of(context).size.width * 0.02,
+          runSpacing: -MediaQuery.of(context).size.width * 0.06,
+          children: controller.model.users
+              .where((element) => element.isActif == false)
+              .map((User user) => buildButton(user))
+              .toList(),
         ),
       ),
     );
   }
-
 }

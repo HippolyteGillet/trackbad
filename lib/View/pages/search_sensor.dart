@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -44,31 +45,31 @@ class _SearchSensorState extends State<SearchSensor> {
 
 
     return Container(
-      margin: const EdgeInsets.only(top: 10),
-      width: 320,
-      height: 250,
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: MediaQuery.of(context).size.height * 0.3,
       decoration: BoxDecoration(
         border: Border.all(
           color: const Color.fromRGBO(240, 54, 18, 1),
-          width: 5,
+          width: MediaQuery.of(context).size.width * 0.01,
         ),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.02),
       ),
       child: Column(
         children: [
-          const Padding(padding: EdgeInsets.only(top: 10)),
+          Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.02)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Recherche d'appareils",
+              Text("Recherche d'appareils",
                   style: TextStyle(
                     fontFamily: 'LeagueSpartan',
                     fontWeight: FontWeight.w600,
-                    fontSize: 20,
+                    fontSize: MediaQuery.of(context).size.width * 0.03,
                   )),
-              const Padding(padding: EdgeInsets.only(left: 15)),
+              Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.02)),
               LoadingAnimationWidget.staggeredDotsWave(
-                  color: Colors.black, size: 25)
+                  color: Colors.black, size: MediaQuery.of(context).size.width * 0.03),
             ],
           ),
           Expanded(
@@ -76,17 +77,17 @@ class _SearchSensorState extends State<SearchSensor> {
               onRefresh: _refreshSensors,
               child: sensors.isEmpty
                   ? SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Container(
-                  height: 200,
+                  height: MediaQuery.of(context).size.height * 0.25,
                   alignment: Alignment.center,
-                  child: const Text(
+                  child: Text(
                     "Aucun capteurs à proximité ou Bluetooth désactivé",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'LeagueSpartan',
                       fontWeight: FontWeight.w600,
-                      fontSize: 20,
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
                       color: Colors.red,
                     ),
                   ),
