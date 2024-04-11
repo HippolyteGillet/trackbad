@@ -17,9 +17,9 @@ class RawData {
       for (var row in response.data) {
         Data data = Data(
           id: row['id'],
-          acc_X: row['acc_X'],
-          acc_Y: row['acc_Y'],
-          acc_Z: row['acc_Z'],
+          acc_X: row['accx'],
+          acc_Y: row['accy'],
+          acc_Z: row['accz'],
           timestamp: row['timestamp'],
           player_id: row['player_id'],
           type: row['type'],
@@ -41,9 +41,9 @@ class RawData {
   Future<void> newdata(SupabaseClient supabase, List<dynamic> x, List<dynamic> y, List<dynamic> z, List<dynamic> timestamp, String player, String type) async {
     try {
       final response = await supabase.from('data').insert({
-        'acc_X': x,
-        'acc_Y': y,
-        'acc_Z': z,
+        'accx': x,
+        'accy': y,
+        'accz': z,
         'timestamp': timestamp,
         'player_id': player,
         'type': type
@@ -70,9 +70,9 @@ class RawData {
           if (rawdata.indexWhere((element) => element.id == row['id']) == -1) {
             Data data = Data(
               id: row['id'],
-              acc_X: row['acc_X'],
-              acc_Y: row['acc_Y'],
-              acc_Z: row['acc_Z'],
+              acc_X: row['accx'],
+              acc_Y: row['accy'],
+              acc_Z: row['accz'],
               timestamp: row['timestamp'],
               player_id: row['player_id'],
               type: row['type'],
