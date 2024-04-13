@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trackbad/Model/Sensor.dart';
 import 'package:trackbad/View/pages/add_sensor_page.dart';
 import 'ongoing_session_page.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +69,7 @@ class _TrainingPageState extends State<TrainingPage> {
             ]),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.45,
               child: SingleChildScrollView(
                 padding: const EdgeInsets.only(top: 25),
                 scrollDirection: Axis.horizontal,
@@ -97,7 +98,7 @@ class _TrainingPageState extends State<TrainingPage> {
                                     Text('Capteur : ${sensor?.uuid}'),
                                     const SizedBox(height: 8.0),
                                     Text(
-                                        "Type de séance : ${sensor?.seanceType.toString()}"),
+                                        "Type de séance : ${sensor.seanceType?.stringValue}"),
                                   ],
                                 ),
                                 actions: <Widget>[

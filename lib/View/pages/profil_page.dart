@@ -260,12 +260,12 @@ class _ProfilPageState extends State<ProfilPage> {
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.95,
-            height: MediaQuery.of(context).size.height * 0.27,
+            height: MediaQuery.of(context).size.height * 0.3,
             child: Column(
               children: [
                 SizedBox(
                   width: 370, // a changer
-                  height: 200, // a changer
+                  height: 250, // a changer
                   child: ListView.builder(
                       itemCount: controller.model.rawdata.where((element) => element.player_id == id).length,
                       itemBuilder: (context, index) {
