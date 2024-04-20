@@ -43,30 +43,35 @@ class _LoadingFileState extends State<LoadingFile> {
   }
 
   Widget _buildExportOverlay(Controller controller) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("Récupération des données",
-            style: TextStyle(
-              color: Color.fromRGBO(240, 54, 18, 1),
-              fontFamily: 'LeagueSpartan',
-              fontWeight: FontWeight.w700,
-              fontSize: 50,
-            )),
-        const Padding(padding: EdgeInsets.only(top: 20)),
-        LinearProgressIndicator(
-          value: controller.totalPackets > 0 ? controller.currentProgress / controller.totalPackets : 0.0,
-          backgroundColor: Colors.grey[200],
-          valueColor: const AlwaysStoppedAnimation<Color>(Color.fromRGBO(240, 54, 18, 1)),
-        ),
-        const Padding(padding: EdgeInsets.only(top: 50)),
-        if (controller.isExporting)
-          Text("Exportation en cours: ${controller.currentProgress} sur ${controller.totalPackets}")
-        else if(controller.isErasing)
-          const Text("Suppression des données en cours...")
-        else
-          const Text("Préparation de l'exportation..."),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text("Récupération des données",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color.fromRGBO(240, 54, 18, 1),
+                fontFamily: 'LeagueSpartan',
+                fontWeight: FontWeight.w700,
+                fontSize: 40,
+              )),
+          const Padding(padding: EdgeInsets.only(top: 20)),
+          LinearProgressIndicator(
+            value: controller.totalPackets > 0 ? controller.currentProgress / controller.totalPackets : 0.0,
+            backgroundColor: Colors.grey[200],
+            valueColor: const AlwaysStoppedAnimation<Color>(Color.fromRGBO(240, 54, 18, 1)),
+          ),
+          const Padding(padding: EdgeInsets.only(top: 50)),
+          if (controller.isExporting)
+            Text("Exportation en cours: ${controller.currentProgress} sur ${controller.totalPackets}")
+          else if(controller.isErasing)
+            const Text("Suppression des données en cours...", textAlign: TextAlign.center,)
+          else
+            const Text("Préparation de l'exportation..."),
+        ],
+      ),
     );
   }
 }

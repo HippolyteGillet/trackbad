@@ -30,58 +30,58 @@ class _NavbarEventsState extends State<NavbarEvents> {
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height * 0.08,
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 5),
-          child: IconButton(
-            icon: Image.asset(
-              'assets/images/setting-black.png',
-              width: MediaQuery.of(context).size.width * 0.08,
-              height: MediaQuery.of(context).size.width * 0.08,
-            ),
-            onPressed: () async {
-              bool result = await controller.islogged();
-              if (result) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Déconnexion'),
-                      content: const Text('Voulez-vous vous déconnecter ?'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            controller.model.displayUsers();
-                            controller.logout();
-
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LogPage()),
-                            );
-                          },
-                          child: const Text('Oui'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Non'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              } else {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LogPage()),
-                );
-              }
-            },
-          ),
-        ),
         backgroundColor: Colors.transparent,
         actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.58),
+            child: IconButton(
+              icon: Image.asset(
+                'assets/images/setting-black.png',
+                width: MediaQuery.of(context).size.width * 0.08,
+                height: MediaQuery.of(context).size.width * 0.08,
+              ),
+              onPressed: () async {
+                bool result = await controller.islogged();
+                if (result) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Déconnexion'),
+                        content: const Text('Voulez-vous vous déconnecter ?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              controller.model.displayUsers();
+                              controller.logout();
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LogPage()),
+                              );
+                            },
+                            child: const Text('Oui'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Non'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LogPage()),
+                  );
+                }
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: Image.asset(

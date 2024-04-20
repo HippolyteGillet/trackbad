@@ -94,6 +94,7 @@ class _SearchSensorState extends State<SearchSensor> {
                 ),
               )
                   : ListView.builder(
+                padding: const EdgeInsets.all(0),
                 shrinkWrap: true,
                 itemCount: sensors.length,
                 itemBuilder: (context, index) {
